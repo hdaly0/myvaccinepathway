@@ -55,22 +55,6 @@ DOSE_2_IMMUNITY_WANING_RATE = {
 DOSE_IMMUNITY_WANING_RATE = [DOSE_1_IMMUNITY_WANING_RATE, DOSE_2_IMMUNITY_WANING_RATE]
 
 
-# def get_immunity_level(vaccine=PFIZER):
-#     # TODO: Logic
-#     immunity_level_by_day = []
-#     if dose_1:
-#         # Dose 1
-#         immunity_level_by_day += [INITIAL_IMMUNITY_LEVEL * i for i in range(0, dose_1)]
-#         immunity_level_by_day += [INITIAL_IMMUNITY_LEVEL + DOSE_1_INCREASING_IMMUNITY_RATE[vaccine]*i for i in range(DOSE_1_PEAK_IMMUNITY_DAY[vaccine])]
-#         if not dose_2:
-#             immunity_level_by_day += [DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine] - DOSE_1_IMMUNITY_WANING_RATE[vaccine] * i for i in range(end_day - DOSE_1_PEAK_IMMUNITY_DAY[vaccine] - dose_1 + 1)]
-#
-#         # Dose 2
-#         immunity_level_by_day += [DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine] - DOSE_1_IMMUNITY_WANING_RATE[vaccine] * i for i in range(dose_2 - DOSE_1_PEAK_IMMUNITY_DAY[vaccine] - dose_1 + 1)]
-#
-#     return immunity_level_by_day
-
-
 def _convert_dates_to_relative_days(start_date, end_date, dose_dates):
     start_day = 0
     end_day = (end_date - start_date).days
