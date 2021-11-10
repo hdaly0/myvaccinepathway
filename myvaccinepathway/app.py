@@ -62,7 +62,7 @@ def _convert_dates_to_relative_days(start_date, end_date, dose_dates):
     return start_day, end_day, dose_days
 
 
-def linear_plot(start_day, end_day, start_value, end_value):
+def _linear_plot(start_day, end_day, start_value, end_value):
     """ Inclusive of start day, exclusive of end day """
     day_range = end_day - start_day
     value_change = end_value - start_value
@@ -71,7 +71,7 @@ def linear_plot(start_day, end_day, start_value, end_value):
     return linear_values
 
 
-def linear_plot_rate(start_day, end_day, start_value, rate, min_value=0):
+def _linear_plot_rate(start_day, end_day, start_value, rate, min_value=0):
     """ Inclusive of start day, exclusive of end day """
     day_range = end_day - start_day
     linear_values = [start_value + rate*step for step in range(day_range)]
@@ -84,25 +84,25 @@ def _calculate_immunity_levels(vaccine, start_day, end_day, dose_days):
 
     # If no doses given
     if not dose_days:
-        return linear_plot(start_day, end_day, INITIAL_IMMUNITY_LEVEL, INITIAL_IMMUNITY_LEVEL)
+        return _linear_plot(start_day, end_day, INITIAL_IMMUNITY_LEVEL, INITIAL_IMMUNITY_LEVEL)
 
-    immunity_levels += linear_plot(start_day, dose_days[0], INITIAL_IMMUNITY_LEVEL, INITIAL_IMMUNITY_LEVEL)
-    immunity_levels += linear_plot(dose_days[0],
-                                   dose_days[0] + DOSE_1_PEAK_IMMUNITY_DAY[vaccine],
-                                   INITIAL_IMMUNITY_LEVEL,
-                                   DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine])
-    immunity_levels += linear_plot_rate(dose_days[0] + DOSE_1_PEAK_IMMUNITY_DAY[vaccine],
-                                   dose_days[1],
-                                   DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine],
-                                   DOSE_1_IMMUNITY_WANING_RATE[vaccine])
-    immunity_levels += linear_plot(dose_days[1],
-                                   dose_days[1] + DOSE_2_PEAK_IMMUNITY_DAY[vaccine],
-                                   immunity_levels[-1],
-                                   DOSE_2_PEAK_IMMUNITY_LEVEL[vaccine])
-    immunity_levels += linear_plot_rate(dose_days[1] + DOSE_2_PEAK_IMMUNITY_DAY[vaccine],
-                                        end_day,
-                                        DOSE_2_PEAK_IMMUNITY_LEVEL[vaccine],
-                                        DOSE_2_IMMUNITY_WANING_RATE[vaccine])
+    immunity_levels += _linear_plot(start_day, dose_days[0], INITIAL_IMMUNITY_LEVEL, INITIAL_IMMUNITY_LEVEL)
+    immunity_levels += _linear_plot(dose_days[0],
+                                    dose_days[0] + DOSE_1_PEAK_IMMUNITY_DAY[vaccine],
+                                    INITIAL_IMMUNITY_LEVEL,
+                                    DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine])
+    immunity_levels += _linear_plot_rate(dose_days[0] + DOSE_1_PEAK_IMMUNITY_DAY[vaccine],
+                                         dose_days[1],
+                                         DOSE_1_PEAK_IMMUNITY_LEVEL[vaccine],
+                                         DOSE_1_IMMUNITY_WANING_RATE[vaccine])
+    immunity_levels += _linear_plot(dose_days[1],
+                                    dose_days[1] + DOSE_2_PEAK_IMMUNITY_DAY[vaccine],
+                                    immunity_levels[-1],
+                                    DOSE_2_PEAK_IMMUNITY_LEVEL[vaccine])
+    immunity_levels += _linear_plot_rate(dose_days[1] + DOSE_2_PEAK_IMMUNITY_DAY[vaccine],
+                                         end_day,
+                                         DOSE_2_PEAK_IMMUNITY_LEVEL[vaccine],
+                                         DOSE_2_IMMUNITY_WANING_RATE[vaccine])
 
     return immunity_levels
 
@@ -126,6 +126,7 @@ def get_immunity_level(vaccine: str, start_date: date, end_date: date=date.today
 
 
 # User input and streamlit page order
+st.title("My Vaccine Pathway")
 vaccine = st.selectbox("Vaccine", options=[PFIZER, AZ, MODERNA])
 dose_1 = st.date_input("Dose 1", value=date.today() - timedelta(120))
 dose_2 = st.date_input("Dose 2", value=date.today() - timedelta(30))
@@ -136,5 +137,6 @@ start_date = dose_1 - timedelta(10)
 # Calculations
 data = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
 df = pd.DataFrame(data).set_index("dates", drop=True)
+df *= 100
 
 st.line_chart(df)
