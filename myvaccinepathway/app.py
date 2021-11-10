@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
+import plotly.express as px
 from typing import List
 
 
@@ -136,7 +137,14 @@ start_date = dose_1 - timedelta(10)
 
 # Calculations
 data = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
-df = pd.DataFrame(data).set_index("dates", drop=True)
-df *= 100
+df = pd.DataFrame(data)
 
-st.line_chart(df)
+df["immunity_level_percentage"] = df["immunity_level"]*100
+
+st.line_chart(df[["immunity_level_percentage", "dates"]].set_index("dates"))
+
+# Plotly
+fig = px.line(df, x="dates", y="immunity_level_percentage",
+              labels={"dates": "Date", "immunity_level_percentage": "Immunity Level %"})
+st.plotly_chart(fig)
+
