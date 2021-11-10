@@ -127,6 +127,8 @@ def get_immunity_level(vaccine: str, start_date: date, end_date: date=date.today
 
 
 # User input and streamlit page order
+st.set_page_config(layout="wide")
+
 st.title("My Vaccine Pathway")
 
 # Use form with submit button so page doesn't recalculate every time, only on submit
@@ -155,5 +157,4 @@ fig = px.line(df, x="dates", y="immunity_level_percentage",
 # fig.update_yaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
 fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
 fig.update_layout(spikedistance=1000, hoverdistance=100)
-st.plotly_chart(fig)
-
+st.plotly_chart(fig, use_container_width=True)
