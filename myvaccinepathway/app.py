@@ -15,13 +15,6 @@ PFIZER = "pfizer"
 AZ = "astrazeneca"
 MODERNA = "moderna"
 
-# User input
-vaccine = st.selectbox("Vaccine", options=[PFIZER, AZ, MODERNA])
-dose_1 = st.date_input("Dose 1", value=date.today() - timedelta(120))
-dose_2 = st.date_input("Dose 2", value=date.today() - timedelta(30))
-end_date = st.date_input("End date", value=date.today())
-
-start_date = dose_1 - timedelta(10)
 
 DOSE_1_PEAK_IMMUNITY_LEVEL = {
     PFIZER: 0.3,
@@ -148,6 +141,15 @@ def get_immunity_level(vaccine: str, start_date: date, end_date: date=date.today
     return data
 
 
+# User input and streamlit page order
+vaccine = st.selectbox("Vaccine", options=[PFIZER, AZ, MODERNA])
+dose_1 = st.date_input("Dose 1", value=date.today() - timedelta(120))
+dose_2 = st.date_input("Dose 2", value=date.today() - timedelta(30))
+end_date = st.date_input("End date", value=date.today())
+
+start_date = dose_1 - timedelta(10)
+
+# Calculations
 data = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
 df = pd.DataFrame(data).set_index("dates", drop=True)
 
