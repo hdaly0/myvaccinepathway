@@ -128,12 +128,17 @@ def get_immunity_level(vaccine: str, start_date: date, end_date: date=date.today
 
 # User input and streamlit page order
 st.title("My Vaccine Pathway")
-vaccine = st.selectbox("Vaccine", options=[PFIZER, AZ, MODERNA])
-dose_1 = st.date_input("Dose 1", value=date.today() - timedelta(120))
-dose_2 = st.date_input("Dose 2", value=date.today() - timedelta(30))
-end_date = st.date_input("End date", value=date.today())
+
+# Use form with submit button so page doesn't recalculate every time, only on submit
+with st.form(key='user_info_form'):
+    st.write("Input your vaccination details")
+    vaccine = st.selectbox("Vaccine type", options=[PFIZER, AZ, MODERNA])
+    dose_1 = st.date_input("Dose 1 date", value=date.today() - timedelta(120))
+    dose_2 = st.date_input("Dose 2 date", value=date.today() - timedelta(30))
+    submit_button = st.form_submit_button(label='Submit')
 
 start_date = dose_1 - timedelta(10)
+end_date = date.today() + timedelta(10)
 
 # Calculations
 data = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
@@ -141,10 +146,14 @@ df = pd.DataFrame(data)
 
 df["immunity_level_percentage"] = df["immunity_level"]*100
 
-st.line_chart(df[["immunity_level_percentage", "dates"]].set_index("dates"))
+# st.line_chart(df[["immunity_level_percentage", "dates"]].set_index("dates"))
 
 # Plotly
 fig = px.line(df, x="dates", y="immunity_level_percentage",
+              range_y=[0, 100],
               labels={"dates": "Date", "immunity_level_percentage": "Immunity Level %"})
+# fig.update_yaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
+fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
+fig.update_layout(spikedistance=1000, hoverdistance=100)
 st.plotly_chart(fig)
 
