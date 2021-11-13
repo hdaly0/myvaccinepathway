@@ -143,18 +143,36 @@ start_date = dose_1 - timedelta(10)
 end_date = date.today() + timedelta(10)
 
 # Calculations
-data = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
-df = pd.DataFrame(data)
+data_symptomatic_immunity = get_immunity_level(vaccine, start_date, end_date, [dose_1, dose_2])
+df_symptomatic_immunity = pd.DataFrame(data_symptomatic_immunity)
 
-df["immunity_level_percentage"] = df["immunity_level"]*100
-
-# st.line_chart(df[["immunity_level_percentage", "dates"]].set_index("dates"))
 
 # Plotly
-fig = px.line(df, x="dates", y="immunity_level_percentage",
-              range_y=[0, 100],
-              labels={"dates": "Date", "immunity_level_percentage": "Immunity Level %"})
-# fig.update_yaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
-fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
-fig.update_layout(spikedistance=1000, hoverdistance=100)
-st.plotly_chart(fig, use_container_width=True)
+# Timeline plot
+data_timeline = {
+    "dates": [dose_1, dose_2],
+    "values": [0.2, 0.2],
+    "text": ["Dose 1", "Dose 2"]
+}
+df_timeline = pd.DataFrame(data_timeline)
+fig_timeline = px.scatter(df_timeline, x="dates", y="values",
+                          text="text",
+                          height=250,
+                          title="My vaccine timeline")
+fig_timeline.update_xaxes(range=[start_date, end_date], showgrid=False, title="")
+fig_timeline.update_yaxes(range=[-0.2, 1], showgrid=False, title="", showticklabels=False)
+fig_timeline.update_traces(marker={"symbol": "triangle-down"}, marker_size=20, textposition="top center")
+fig_timeline.update_layout(hovermode=False, plot_bgcolor="rgba(0,0,0,0)")
+
+st.plotly_chart(fig_timeline, use_container_width=True)
+
+# Symptomatic immunity plot
+fig_symptomatic_immunity = px.line(df_symptomatic_immunity, x="dates", y="immunity_level",
+                                   labels={"dates": "Date", "immunity_level": "Immunity Level"},
+                                   title="Immunity from Symptomatic infection")
+fig_symptomatic_immunity.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across")
+fig_symptomatic_immunity.update_yaxes(tickformat=".1%", range=[0, 1])
+fig_symptomatic_immunity.update_layout(spikedistance=1000, hovermode="x")
+fig_symptomatic_immunity.update_traces(mode="lines", hovertemplate=None)
+
+st.plotly_chart(fig_symptomatic_immunity, use_container_width=True)
