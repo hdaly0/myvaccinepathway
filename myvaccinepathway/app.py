@@ -55,6 +55,11 @@ DOSE_2_IMMUNITY_WANING_RATE = {
 }
 DOSE_IMMUNITY_WANING_RATE = [DOSE_1_IMMUNITY_WANING_RATE, DOSE_2_IMMUNITY_WANING_RATE]
 
+DEFAULT_JAB_DATE_OFFSET = {
+    1: 120,
+    2: 30
+}
+
 
 def _convert_dates_to_relative_days(start_date, end_date, dose_dates):
     start_day = 0
@@ -131,13 +136,22 @@ st.set_page_config(layout="wide")
 
 st.title("My Vaccine Pathway")
 
+number_of_doses = st.number_input("How many jabs have you had?", value=2)
+
 # Use form with submit button so page doesn't recalculate every time, only on submit
 with st.form(key='user_info_form'):
     st.write("Input your vaccination details")
     vaccine = st.selectbox("Vaccine type", options=[PFIZER, AZ, MODERNA])
-    dose_1 = st.date_input("Dose 1 date", value=date.today() - timedelta(120))
-    dose_2 = st.date_input("Dose 2 date", value=date.today() - timedelta(30))
+    dose_dates = []
+    # Allow for variable numbers of doses
+    for dose_number in range(1, number_of_doses + 1):
+        dose_dates.append(st.date_input(f"Dose {dose_number} date",
+                                        value=date.today() - timedelta(DEFAULT_JAB_DATE_OFFSET.get(dose_number, 0))))
     submit_button = st.form_submit_button(label='Submit')
+
+# TODO: Remove this hardcoding
+dose_1 = dose_dates[0]
+dose_2 = dose_dates[1]
 
 start_date = dose_1 - timedelta(10)
 end_date = date.today() + timedelta(10)
@@ -150,9 +164,9 @@ df_symptomatic_immunity = pd.DataFrame(data_symptomatic_immunity)
 # Plotly
 # Timeline plot
 data_timeline = {
-    "dates": [dose_1, dose_2],
-    "values": [0.2, 0.2],
-    "text": ["Dose 1", "Dose 2"]
+    "dates": dose_dates,
+    "values": [0.2]*len(dose_dates),
+    "text": [f"Dose {dose_number}" for dose_number in range(1, len(dose_dates) + 1)]
 }
 df_timeline = pd.DataFrame(data_timeline)
 fig_timeline = px.scatter(df_timeline, x="dates", y="values",
