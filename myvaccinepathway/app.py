@@ -5,12 +5,22 @@ import plotly.express as px
 
 from functions import get_immunity_level
 from vaccine_data import *
-
+from html_snippets import *
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
 
-st.title("My Vaccine Pathway")
+# Header
+st.markdown(CURRENT_PRODUCT_STAGE, unsafe_allow_html=True)
+
+# Product stage - alpha, beta, gamma
+st.markdown(PRODUCT_STAGES, unsafe_allow_html=True)
+
+# Disclaimer
+st.markdown(DISCLAIMER, unsafe_allow_html=True)
+
+# Gather information
+st.markdown("<h4 style='text-align: center;'>Your information</h4>", unsafe_allow_html=True)
 
 number_of_doses = st.number_input("How many jabs have you had?", value=2)
 
@@ -38,7 +48,8 @@ df_symptomatic_immunity = pd.DataFrame(data_symptomatic_immunity)
 
 # Print current immunity levels
 current_symptomatic_immunity_level = df_symptomatic_immunity.set_index("dates").loc[date.today()]["immunity_level"]
-st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
+# TODO: remove this: st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
+st.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%</h1><hr>", unsafe_allow_html=True)
 
 # Plotly
 # Timeline plot
