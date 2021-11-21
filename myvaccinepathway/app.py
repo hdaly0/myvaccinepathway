@@ -27,7 +27,7 @@ number_of_doses = st.number_input("How many jabs have you had?", value=2)
 # Use form with submit button so page doesn't recalculate every time, only on submit
 with st.form(key='user_info_form'):
     st.write("Input your vaccination details")
-    vaccine = st.selectbox("Vaccine type", options=[PFIZER, AZ, MODERNA])
+    vaccine = st.radio("Vaccine type", options=[PFIZER, AZ, MODERNA])
     dose_dates = []
     # Allow for variable numbers of doses
     for dose_number in range(1, number_of_doses + 1):

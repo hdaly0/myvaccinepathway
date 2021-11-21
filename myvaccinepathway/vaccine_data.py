@@ -2,9 +2,9 @@
 Constants and vaccine immunity level data
 """
 
-PFIZER = "pfizer"
-AZ = "astrazeneca"
-MODERNA = "moderna"
+PFIZER = "Pfizer"
+AZ = "AstraZeneca"
+MODERNA = "Moderna"
 
 INITIAL_IMMUNITY_LEVEL = 0
 
