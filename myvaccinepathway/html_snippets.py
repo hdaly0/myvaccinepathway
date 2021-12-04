@@ -23,3 +23,11 @@ PRODUCT_STAGES = """
 <p style="color: gold; display: inline;">γamma</p>: \tfinal offering: All features required are offered.<br>
 <hr>
 """
+
+ASSUMPTIONS = """
+<h4 style="text-align: center;">Assumptions</h4>
+<ul>
+  <li>Doses 3 and onwards are assumed to be Pfizer jabs since these are generally the boosters and 3rd jabs on offer in the UK</li>
+</ul>
+<hr>
+"""
