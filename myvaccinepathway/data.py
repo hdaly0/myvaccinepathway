@@ -2,15 +2,24 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Dose number
 DOSE_1 = "dose_1"
 DOSE_2 = "dose_2"
+# DOSE_3_PLUS = DOSE_2  # Use immunity data from dose 2 for all future doses
 BOOSTER = "booster"
+ALLOWED_DOSE_NUMBERS = [DOSE_1, DOSE_2, BOOSTER]
+
+# Vaccine type
 ASTRAZENECA = "astrazeneca"
 PFIZER = "pfizer"
 MODERNA = "moderna"
+ALLOWED_VACCINE_TYPES = [ASTRAZENECA, PFIZER, MODERNA]
+
+# Immunity type
 SYMPTOMATIC = "symptomatic"
 HOSPITALISATION = "hospitalisation"
 DEATH = "death"
+ALLWED_IMMUNITY_TYPES = [SYMPTOMATIC, HOSPITALISATION, DEATH]
 
 """ Store all real world immunity data """
 IMMUNITY = {
@@ -283,36 +292,43 @@ IMMUNITY = {
     },
 }
 
-""" Dose 2"""
-AZ_IMMUNITY_HOSPITALISATION_POST_JAB_2 = [
-    # (day_since_jab_2, immunity pair)
-    # (7, 94),
-    # (10, 94),
-    (11, 94), # Dose date should be day 0 not day 1
-    # (13, 94),
 
-    # (14, 95),
-    (41, 95),
-    # (69, 95),
+DAY_INDEX = 0
+IMMUNITY_INDEX = 1
 
-    # (70, 92),
-    (87, 92),
-    # (104, 92),
 
-    # (105, 88),
-    (122, 88),
-    # (139, 88),
+def _create_immunity_by_day_series(immunity_at_given_points):
+    immunity_series = pd.Series([np.NAN] * (immunity_at_given_points[-1][DAY_INDEX] + 1))
 
-    (140, 77),
+    for day, immunity in immunity_at_given_points:
+        immunity_series[day] = immunity
 
-]
+    immunity_series = immunity_series.interpolate()
 
-az_immunity_series = pd.Series([np.NAN] * 200)
+    return immunity_series
 
-for day, immunity in AZ_IMMUNITY_POST_JAB_2:
-    az_immunity_series[day] = immunity
 
-az_immunity_series = az_immunity_series.interpolate()
+def get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type):
+    if dose_number not in ALLOWED_DOSE_NUMBERS:
+        raise ValueError(f"{dose_number} not in allowed list: {ALLOWED_DOSE_NUMBERS}")
+
+    if vaccine_type not in ALLOWED_VACCINE_TYPES:
+        raise ValueError(f"{vaccine_type} not in allowed list: {ALLOWED_VACCINE_TYPES}")
+
+    if immunity_type not in ALLWED_IMMUNITY_TYPES:
+        raise ValueError(f"{immunity_type} not in allowed list: {ALLWED_IMMUNITY_TYPES}")
+
+    immunity_datapoints = IMMUNITY[dose_number][vaccine_type][immunity_type]
+
+    immunity_series = _create_immunity_by_day_series(immunity_datapoints)
+
+    return immunity_series
+
+
+def get_immunity(dose_number, vaccine_type):
+    return {immunity_type: get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
+
+
 # print(az_immunity_series)
 # az_immunity_series.plot()
 # plt.show()
