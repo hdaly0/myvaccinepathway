@@ -27,6 +27,7 @@ PRODUCT_STAGES = """
 ASSUMPTIONS = """
 <h4 style="text-align: center;">Assumptions</h4>
 <ul>
+  <li>Doses 1 and 2 were of the same type. I.e. either both doses 1 and 2 were AstraZeneca, Pfizer, or Moderna, but not a combination of the three.</li>
   <li>Doses 3 and onwards are assumed to be Pfizer jabs since these are generally the boosters and 3rd jabs on offer in the UK</li>
 </ul>
 <hr>
