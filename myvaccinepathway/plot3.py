@@ -68,17 +68,6 @@ for dose in doses:
     immunity_series[dose_date: peak_immunity_date] = np.linspace(immunity_series[dose_date], peak_immunity_level, immunity_delay)
 
     # Post immunity, real data
-    # max_timedelta = int(az_immunity_series.index.max())
-    # index_overwrite = immunity_series[str(dose.dose_date + timedelta(immunity_delay)): str(dose.dose_date + timedelta(max_timedelta))].index
-    # post_immunity_data = az_immunity_series[immunity_delay:]#.reindex(index_overwrite) //REINDEX doesn't work'
-    # print(len(immunity_series[index_overwrite]))
-    # print(len(post_immunity_data.tolist()))
-    # immunity_series[index_overwrite] = post_immunity_data.tolist()
-
-    # max_datapoints = min(len(az_immunity_series), len(immunity_series[dose_date:]))
-    # max_date = str(dose.dose_date + timedelta(max_datapoints))
-    # immunity_series[peak_immunity_date: max_date] = az_immunity_series[immunity_delay: max_datapoints + 1].tolist()
-
     vaccine_immunity = az_immunity_series.copy()
     vaccine_immunity.index = pd.date_range(dose.dose_date, dose.dose_date + timedelta(int(vaccine_immunity.index.max())))
     vaccine_immunity = vaccine_immunity.dropna()
@@ -95,41 +84,6 @@ for dose in doses:
     plateau_end_date = str(max(immunity_series.index))
     immunity_series[plateau_start_date: plateau_end_date] = immunity_plateau_value
 
-# immunity_series = immunity_series.interpolate(method="spline", order=3)
-
 print(immunity_series)
 immunity_series.plot()
 plt.show()
-
-
-
-#
-# class VaccineImmunity:
-#     def __init__(self, immunity_levels, immunity_delay):
-#         self.immunity_level = [0.0] + immunity_levels
-#         self.peak_immunity_delay = [0] + immunity_delay
-#
-#     def __getitem__(self, item: int):
-#         if item < 0:
-#             return self.immunity_level[0]
-#
-#         if item > len(self.immunity_level):
-#             return self.immunity_level[-1]
-#
-#         return self.immunity_level[item]
-#
-#     def immunity_delay(self, dose):
-#         if dose < 0:
-#             return self.peak_immunity_delay[0]
-#
-#         if dose > len(self.peak_immunity_delay):
-#             return self.peak_immunity_delay[-1]
-#
-#         return self.peak_immunity_delay[dose]
-#
-#
-# AZ_IMMUNITY = VaccineImmunity(
-#     immunity_levels=[0.45, 0.6],
-#     immunity_delay=[7, 7],
-# )
-
