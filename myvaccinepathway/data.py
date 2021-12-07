@@ -32,9 +32,10 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 30),
-                (14, 45),
-                # (14, 50),
+                (14, (40, 45, 50)),
+
+                # TODO: Plateau to 44 after 3 months - this is a guess given dose 2, day 3, has 44% immunity
+                (90, (41, 44, 46)),
             ],
 
             HOSPITALISATION: [
@@ -42,9 +43,7 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 75),
-                (14, 80),
-                # (14, 85),
+                (14, (75, 80, 85)),
             ],
 
             DEATH: [
@@ -52,9 +51,7 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 75),
-                (14, 80),
-                # (14, 85),
+                (14, (75, 80, 85)),
             ],
         },
 
@@ -64,9 +61,7 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 50),
-                (14, 55),
-                # (14, 65),
+                (14, (50, 55, 65)),
             ],
 
             HOSPITALISATION: [
@@ -74,9 +69,7 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 75),
-                (14, 80),
-                # (14, 85),
+                (14, (75, 80, 85)),
             ],
 
             DEATH: [
@@ -84,9 +77,7 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 75),
-                (14, 80),
-                # (14, 85),
+                (14, (75, 80, 85)),
             ],
         },
 
@@ -96,17 +87,28 @@ IMMUNITY = {
                 (11, 0),
 
                 # TODO: 14 days is a guess. Need evidence/reference
-                # (14, 60),
-                (14, 75),
-                # (14, 90),
+                (14, (60, 75, 90)),
             ],
 
             HOSPITALISATION: [
                 # TODO: "Insufficient Data" in source above.
+                # Using Symptomatic data above as this will be a lower bound
+
+                # (day_since_jab, immunity pair)
+                (11, 0),
+
+                # TODO: 14 days is a guess. Need evidence/reference
+                (14, (60, 75, 90)),
             ],
 
             DEATH: [
                 # TODO: "Insufficient Data" in source above.
+                # Using Symptomatic data above as this will be a lower bound
+                # (day_since_jab, immunity pair)
+                (11, 0),
+
+                # TODO: 14 days is a guess. Need evidence/reference
+                (14, (60, 75, 90)),
             ],
         },
     },
@@ -120,114 +122,115 @@ IMMUNITY = {
                 # (day_since_jab_2, immunity pair)
 
                 # 0 - 3 days -> choose day 2
-                # (2, 42),
-                (2, 44),
-                # (2, 46),
+                (2, (42, 44, 46)),
 
                 # 4 - 6 days -> choose day 5
-                # (5, 42),
-                (5, 44),
-                # (5, 47),
+                (5, (42, 44, 47)),
 
                 # 7 - 13 days -> choose day 10
-                # (10, 61),
-                (10, 61),
-                # (10, 61),
+                (10, (59, 61, 63)),
 
                 # 14 - 69 days -> choose day 42
-                # (42, 66),
-                (42, 66),
-                # (42, 66),
+                (42, (64, 66, 68)),
 
                 # 70 - 104 days -> choose 87
-                # (87, 61),
-                (87, 61),
-                # (87, 61),
+                (87, (59, 61, 63)),
 
                 # 105 - 139 days -> choose 122
-                # (122, 57),
-                (122, 57),
-                # (122, 57),
+                (122, (55, 57, 59)),
 
                 # 140 + -> choose 140
-                # (140, 48),
-                (140, 53),
-                # (140, 56),
+                (140, (48, 53, 56)),
             ],
 
             HOSPITALISATION: [
                 # (day_since_jab_2, immunity pair)
-                # (7, 94),
+                # TODO: Check these 4 values??
+                # (7, 92),
                 # (10, 94),
-                (11, 94),  # Dose date should be day 0 not day 1
+                (11, (92, 94, 96)),  # Dose date should be day 0 not day 1
                 # (13, 94),
 
                 # (14, 95),
-                (41, 95),
+                (41, (93, 95, 97)),
                 # (69, 95),
 
                 # (70, 92),
-                (87, 92),
+                (87, (90, 92, 94)),
                 # (104, 92),
 
                 # (105, 88),
-                (122, 88),
+                (122, (86, 88, 90)),
                 # (139, 88),
 
-                (140, 77),
+                # (140, 77),
+                (140, (75, 77, 79)),
+                # (140, 77),
             ],
 
             DEATH: [
-                # TODO
+                # 14 - 69 days -> choose day 42
+                (42, (91, 93, 96)),
+
+                # 70 - 104 days -> choose 87
+                (87, (88, 92, 95)),
+
+                # 105 - 139 days -> choose 122
+                (122, (80, 87, 92)),
+
             ],
         },
 
         PFIZER: {
+            # Source: https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1017309/S1362_PHE_duration_of_protection_of_COVID-19_vaccines_against_clinical_disease.pdf
             SYMPTOMATIC: [
                 # (day_since_jab_2, immunity pair)
 
                 # 0 - 3 days -> choose day 2
-                # (2, 52),
-                (2, 54),
-                # (2, 56),
+                (2, (52, 54, 56)),
 
                 # 4 - 6 days -> choose day 5
-                # (5, 66),
-                (5, 68),
-                # (5, 70),
+                (5, (66, 68, 70)),
 
                 # 7 - 13 days -> choose day 10
-                # (10, 90),
-                (10, 92),
-                # (10, 94),
+                (10, (90, 92, 94)),
 
                 # 14 - 69 days -> choose day 42
-                # (42, 91),
-                (42, 89),
-                # (42, 87),
+                (42, (87, 89, 91)),
 
                 # 70 - 104 days -> choose 87
-                # (87, 78),
-                (87, 80),
-                # (87, 82),
+                (87, (78, 80, 82)),
 
                 # 105 - 139 days -> choose 122
-                # (122, 77),
-                (122, 75),
-                # (122, 73),
+                (122, (73, 75, 77)),
 
                 # 140 + -> choose 140
-                # (140, 71),
-                (140, 73),
-                # (140, 75),
+                (140, (71, 73, 75)),
             ],
 
             HOSPITALISATION: [
-                # TODO
+                # (day_since_jab_2, immunity pair)
+                (11, (90, 100, 100)),
+
+                (41, (96, 98, 100)),
+
+                (87, (94, 96, 98)),
+
+                (122, (93, 95, 97)),
+
+                (140, (88, 94, 97)),
+
             ],
 
             DEATH: [
-                # TODO
+                # (day_since_jab_2, immunity pair)
+                (42, (95, 98, 100)),
+
+                (87, (92, 95, 97)),
+
+                (122, (90, 94, 97)),
+
+                (140, (87, 93, 97)),
             ],
         },
 
@@ -236,24 +239,16 @@ IMMUNITY = {
                 # (day_since_jab_2, immunity pair)
 
                 # 0 - 3 days -> choose day 2
-                # (2, 71),
-                (2, 74),
-                # (2, 77),
+                (2, (71, 74, 77)),
 
                 # 4 - 6 days -> choose day 5
-                # (5, 83),
-                (5, 80),
-                # (5, 77),
+                (5, (77, 80, 83)),
 
                 # 7 - 13 days -> choose day 10
-                # (10, 93),
-                (10, 95),
-                # (10, 97),
+                (10, (93, 95, 97)),
 
                 # 14 - 69 days -> choose day 42
-                # (42, 93),
-                (42, 95),
-                # (42, 97),
+                (42, (93, 95, 97)),
 
                 # 70 - 104 days -> choose 87
                 # TODO: Not enough data yet
@@ -266,11 +261,14 @@ IMMUNITY = {
             ],
 
             HOSPITALISATION: [
-                # TODO
+                # TODO: Not enough data yet
+                # Use pfizer data as similar vaccine and pfizer seems to be lower bound in all research
             ],
 
             DEATH: [
-                # TODO
+                # TODO: Not enough data yet
+                # Using pfizer data as similar vaccine and pfizer seems to be lower bound in all research
+
             ],
         },
     },
@@ -291,6 +289,9 @@ IMMUNITY = {
         },
     },
 }
+# Use Pfizer dose 2 hospitalisation and death data for Moderna dose 2 as no moderna data available
+IMMUNITY[DOSE_2][MODERNA][HOSPITALISATION] = IMMUNITY[DOSE_2][PFIZER][HOSPITALISATION]
+IMMUNITY[DOSE_2][MODERNA][DEATH] = IMMUNITY[DOSE_2][PFIZER][DEATH]
 
 
 DAY_INDEX = 0
