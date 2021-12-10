@@ -25,6 +25,8 @@ INDEX = "delay"
 COLUMNS = ["lower", "average", "upper"]
 
 """ Store all real world immunity data """
+INITIAL_IMMUNITY = 0
+
 IMMUNITY = {
     DOSE_1: {
         ASTRAZENECA: {

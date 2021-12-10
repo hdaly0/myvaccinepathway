@@ -4,7 +4,6 @@ import numpy as np
 from datetime import date, timedelta
 from data import *
 
-INITIAL_IMMUNITY = 0
 start_date = date(2021, 1, 1)
 end_date = date(2022, 12, 31)
 
@@ -58,12 +57,13 @@ for dose in doses:
     # Just symptomatic for now
     vaccine_immunity = dose.get_immunity(SYMPTOMATIC).copy()
     vaccine_immunity.index = pd.date_range(dose.dose_date, dose.dose_date + timedelta(int(vaccine_immunity.index.max())))
-    plateau_value = vaccine_immunity.iloc[-1]
+    plateau_values = vaccine_immunity.iloc[-1]
 
     # Piecewise combine series by taking max of two values, and plateau_value for missing values
-    immunity_df[dose_date:] = immunity_df[dose_date:].combine(vaccine_immunity[dose_date:], func=np.maximum, fill_value=plateau_value)
+    for col in immunity_df.columns:
+        immunity_df.loc[dose_date:, col] = immunity_df.loc[dose_date:, col].combine(vaccine_immunity.loc[dose_date:, col], func=np.fmax, fill_value=plateau_values[col])
 
-# immunity_series = immunity_series.rolling(XYZ).mean()
+immunity_df = immunity_df.rolling(30).mean()
 
 print(immunity_df)
 immunity_df.plot()
