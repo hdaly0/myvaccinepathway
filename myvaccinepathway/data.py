@@ -21,6 +21,9 @@ HOSPITALISATION = "hospitalisation"
 DEATH = "death"
 ALLWED_IMMUNITY_TYPES = [SYMPTOMATIC, HOSPITALISATION, DEATH]
 
+INDEX = "delay"
+COLUMNS = ["lower", "average", "upper"]
+
 """ Store all real world immunity data """
 IMMUNITY = {
     DOSE_1: {
@@ -29,7 +32,7 @@ IMMUNITY = {
             # Source - time to first immunity: https://www.health.gov.au/initiatives-and-programs/covid-19-vaccines/is-it-true/is-it-true-how-long-does-it-take-to-have-immunity-after-vaccination
             SYMPTOMATIC: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (40, 45, 50)),
@@ -40,7 +43,8 @@ IMMUNITY = {
 
             HOSPITALISATION: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
+
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (75, 80, 85)),
@@ -48,7 +52,7 @@ IMMUNITY = {
 
             DEATH: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (75, 80, 85)),
@@ -58,7 +62,7 @@ IMMUNITY = {
         PFIZER: {
             SYMPTOMATIC: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (50, 55, 65)),
@@ -66,7 +70,7 @@ IMMUNITY = {
 
             HOSPITALISATION: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (75, 80, 85)),
@@ -74,7 +78,7 @@ IMMUNITY = {
 
             DEATH: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (75, 80, 85)),
@@ -84,7 +88,7 @@ IMMUNITY = {
         MODERNA: {
             SYMPTOMATIC: [
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (60, 75, 90)),
@@ -95,7 +99,7 @@ IMMUNITY = {
                 # Using Symptomatic data above as this will be a lower bound
 
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (60, 75, 90)),
@@ -105,7 +109,7 @@ IMMUNITY = {
                 # TODO: "Insufficient Data" in source above.
                 # Using Symptomatic data above as this will be a lower bound
                 # (day_since_jab, immunity pair)
-                (11, 0),
+                (11, (0, 0, 0)),
 
                 # TODO: 14 days is a guess. Need evidence/reference
                 (14, (60, 75, 90)),
@@ -299,14 +303,18 @@ IMMUNITY_INDEX = 1
 
 
 def _create_immunity_by_day_series(immunity_at_given_points):
-    immunity_series = pd.Series([np.NAN] * (immunity_at_given_points[-1][DAY_INDEX] + 1))
+    flattened_immunity_at_given_points = [(delay_day, lower, average, upper) for (delay_day, (lower, average, upper)) in immunity_at_given_points]
+    immunity_df = pd.DataFrame(flattened_immunity_at_given_points, columns=[INDEX] + COLUMNS).set_index(INDEX)
+    immunity_df = immunity_df.reindex(index=range(0, immunity_df.index.max() + 1))
 
-    for day, immunity in immunity_at_given_points:
-        immunity_series[day] = immunity
+    # immunity_series = pd.Series([np.NAN] * (immunity_at_given_points[-1][DAY_INDEX] + 1))
+    #
+    # for day, immunity in immunity_at_given_points:
+    #     immunity_series[day] = immunity
 
-    immunity_series = immunity_series.interpolate()
+    immunity_df = immunity_df.interpolate()
 
-    return immunity_series
+    return immunity_df
 
 
 def get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type):
