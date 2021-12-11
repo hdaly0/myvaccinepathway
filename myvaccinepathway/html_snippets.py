@@ -11,7 +11,7 @@ no responsibility or liability for any of the information displayed or consequen
 
 CURRENT_PRODUCT_STAGE = """
 <div style="text-align: center;">
-    <h1 style="display:inline;">My vaccine pathway: </h1><h1 style="color: red; display: inline;">αlpha</h1>
+    <h1 style="display:inline;">My vaccine pathway: </h1><h1 style="color: red; display: inline;">αlpha v2.0</h1>
 </div>
 <hr>
 """
@@ -27,7 +27,9 @@ PRODUCT_STAGES = """
 ASSUMPTIONS = """
 <h4 style="text-align: center;">Assumptions</h4>
 <ul>
+  <li>Doses 1 and 2 were of the same type. I.e. either both doses 1 and 2 were AstraZeneca, Pfizer, or Moderna, but not a combination of the three.</li>
   <li>Doses 3 and onwards are assumed to be Pfizer jabs since these are generally the boosters and 3rd jabs on offer in the UK</li>
+  <li>Moderna data is less available than Astrazeneca and Pfizer due to it's later approval in the UK. Where Moderna data is missing, the corresponding Pfizer data is used instead since the vaccine types are most similar and the trend seems to be Moderna having greater immunity levels, so using Pfizer will provide a lower bound.</li>
 </ul>
 <hr>
 """
