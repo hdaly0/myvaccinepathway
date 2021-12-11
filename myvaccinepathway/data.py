@@ -282,16 +282,12 @@ DAY_INDEX = 0
 IMMUNITY_INDEX = 1
 
 
-def _create_immunity_by_day_series(immunity_at_given_points):
+def _get_interpolated_df_from_raw_data(immunity_at_given_points):
     flattened_immunity_at_given_points = [(delay_day, lower, average, upper) for (delay_day, (lower, average, upper)) in immunity_at_given_points]
     immunity_df = pd.DataFrame(flattened_immunity_at_given_points, columns=[INDEX] + COLUMNS).set_index(INDEX)
     immunity_df = immunity_df.reindex(index=range(0, immunity_df.index.max() + 1))
 
-    # immunity_series = pd.Series([np.NAN] * (immunity_at_given_points[-1][DAY_INDEX] + 1))
-    #
-    # for day, immunity in immunity_at_given_points:
-    #     immunity_series[day] = immunity
-
+    # Linear interpolation to fill NANs
     immunity_df = immunity_df.interpolate()
 
     return immunity_df
@@ -309,9 +305,9 @@ def get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type
 
     immunity_datapoints = IMMUNITY[dose_number][vaccine_type][immunity_type]
 
-    immunity_series = _create_immunity_by_day_series(immunity_datapoints)
+    immunity_df = _get_interpolated_df_from_raw_data(immunity_datapoints)
 
-    return immunity_series
+    return immunity_df
 
 
 def get_immunity(dose_number, vaccine_type):

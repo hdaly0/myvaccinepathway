@@ -59,9 +59,19 @@ if submit_button:
     # current_symptomatic_immunity_level_average = df_symptomatic_immunity.loc[str(date.today()), "average"]
     current_symptomatic_immunity_level_upper = df_symptomatic_immunity.loc[str(date.today()), "upper"]
     # TODO: remove this: st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
-    st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to symptomatic covid is: "
-                       f"{current_symptomatic_immunity_level_lower:.1f}-{current_symptomatic_immunity_level_upper:.1f}%"
-                       f"</h1><hr>", unsafe_allow_html=True)
+    st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to covid is:</h4>", unsafe_allow_html=True)
+    # TODO: Clean this up/create a function for this html
+    st_centre.markdown(
+        f"<div><h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
+        f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
+        f"<br>against getting symptomatic covid</h5>"
+        f"<h4 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
+        # f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
+        f"<br>against hospitalisation</h4>"
+        f"<h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
+        # f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
+        f"<br>against death</h5></div><hr>", unsafe_allow_html=True
+    )
 
     # Plotly
     # Timeline plot
