@@ -39,7 +39,6 @@ with st_centre.form(key='user_info_form'):
     for dose_number in range(1, number_of_doses + 1):
         dose_dates.append(
             st.date_input(f"Dose {dose_number} date",
-                          # value=date.today() - timedelta(DEFAULT_JAB_DATE_OFFSET.get(dose_number, 0)))
                           value=DEFAULT_JAB_DATE.get(dose_number, date.today() - timedelta(180)))
         )
 
@@ -56,9 +55,13 @@ if submit_button:
     df_symptomatic_immunity = get_symptomatic_immunity(doses, start_date, end_date)
 
     # Print current immunity levels
-    current_symptomatic_immunity_level = df_symptomatic_immunity.loc[str(date.today()), "average"]
+    current_symptomatic_immunity_level_lower = df_symptomatic_immunity.loc[str(date.today()), "lower"]
+    # current_symptomatic_immunity_level_average = df_symptomatic_immunity.loc[str(date.today()), "average"]
+    current_symptomatic_immunity_level_upper = df_symptomatic_immunity.loc[str(date.today()), "upper"]
     # TODO: remove this: st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
-    st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level:.1f}%</h1><hr>", unsafe_allow_html=True)
+    st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to symptomatic covid is: "
+                       f"{current_symptomatic_immunity_level_lower:.1f}-{current_symptomatic_immunity_level_upper:.1f}%"
+                       f"</h1><hr>", unsafe_allow_html=True)
 
     # Plotly
     # Timeline plot
