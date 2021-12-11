@@ -1,8 +1,9 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 from datetime import date, timedelta
-from data import *
+
+from constants import COLUMNS, INDEX, SYMPTOMATIC, PFIZER, DOSE_2, DOSE_1
+from data import get_immunity_specific_immunity_type
 
 
 class Dose:

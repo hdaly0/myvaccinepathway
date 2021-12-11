@@ -1,7 +1,6 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from constants import *
+from constants import DOSE_1, ASTRAZENECA, SYMPTOMATIC, HOSPITALISATION, DEATH, PFIZER, MODERNA, DOSE_2, BOOSTER, INDEX, \
+    COLUMNS, ALLOWED_DOSE_NUMBERS, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES
 
 """ Store all real world immunity data """
 INITIAL_IMMUNITY = 0

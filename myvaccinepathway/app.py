@@ -1,11 +1,11 @@
 import streamlit as st
+import pandas as pd
 from datetime import date, timedelta
-from constants import DEFAULT_JAB_DATE
+from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES
 
 from computation_functions import get_symptomatic_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure
-from data import *
-from html_snippets import *
+from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS, DISCLAIMER, PRODUCT_STAGES
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
