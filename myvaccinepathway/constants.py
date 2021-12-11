@@ -28,7 +28,3 @@ DEFAULT_JAB_DATE = {
     2: date(2021, 6, 1),
     3: date(2021, 12, 1),
 }
-DEFAULT_JAB_DATE_OFFSET = {
-    1: 120,
-    2: 30
-}
