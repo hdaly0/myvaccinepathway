@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from datetime import date, timedelta
 
-from constants import COLUMNS, INDEX, SYMPTOMATIC, PFIZER, DOSE_2, DOSE_1
-from data import get_immunity_specific_immunity_type
+from constants import COLUMNS, INDEX, PFIZER, DOSE_2, DOSE_1
+from data import get_immunity_raw
 
 
 class Dose:
@@ -12,12 +12,10 @@ class Dose:
         self.dose_number = dose_number
         self.vaccine_type = vaccine_type
 
-        # TODO: reintroduce this when all data present
-        # self.immunity = get_immunity(self.dose_number, self.vaccine_type)
+        self.immunity = get_immunity_raw(self.dose_number, self.vaccine_type)
 
-    # TODO: replace this with call in constructor once all data present
     def get_immunity(self, immunity_type):
-        return get_immunity_specific_immunity_type(self.dose_number, self.vaccine_type, immunity_type)
+        return self.immunity[immunity_type]
 
     @staticmethod
     def create_doses(dose_type_pairs):
@@ -47,7 +45,7 @@ def get_start_and_end_dates(doses):
     return start_date, end_date
 
 
-def get_symptomatic_immunity(doses, start_date, end_date):
+def get_immunity(doses, start_date, end_date, immunity_type):
     daterange_index = pd.date_range(start_date, end_date)
 
     immunity_df = pd.DataFrame(0, columns=COLUMNS, index=daterange_index)
@@ -58,7 +56,7 @@ def get_symptomatic_immunity(doses, start_date, end_date):
 
         # Real data
         # Just symptomatic for now
-        vaccine_immunity = dose.get_immunity(SYMPTOMATIC).copy()
+        vaccine_immunity = dose.get_immunity(immunity_type).copy()
         vaccine_immunity.index = pd.date_range(dose.dose_date, dose.dose_date + timedelta(int(vaccine_immunity.index.max())))
         plateau_values = vaccine_immunity.iloc[-1]
 

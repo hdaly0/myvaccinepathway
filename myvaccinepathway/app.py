@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
-from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES
+from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, SYMPTOMATIC, HOSPITALISATION, DEATH
 
-from computation_functions import get_symptomatic_immunity, create_doses, get_start_and_end_dates
+from computation_functions import get_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure
 from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS, DISCLAIMER, PRODUCT_STAGES
 
@@ -52,12 +52,20 @@ if submit_button:
     start_date, end_date = get_start_and_end_dates(doses)
 
     # Get current immunity
-    df_symptomatic_immunity = get_symptomatic_immunity(doses, start_date, end_date)
+    immunity_dfs = {immunity_type: get_immunity(doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
 
     # Print current immunity levels
-    current_symptomatic_immunity_level_lower = df_symptomatic_immunity.loc[str(date.today()), "lower"]
-    # current_symptomatic_immunity_level_average = df_symptomatic_immunity.loc[str(date.today()), "average"]
-    current_symptomatic_immunity_level_upper = df_symptomatic_immunity.loc[str(date.today()), "upper"]
+    current_symptomatic_immunity_level_lower = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "lower"]
+    # current_symptomatic_immunity_level_average = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "average"]
+    current_symptomatic_immunity_level_upper = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "upper"]
+
+    current_hospitalisation_immunity_level_lower = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "lower"]
+    # current_hospitalisation_immunity_level_average = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "average"]
+    current_hospitalisation_immunity_level_upper = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "upper"]
+
+    current_death_immunity_level_lower = immunity_dfs[DEATH].loc[str(date.today()), "lower"]
+    # current_death_immunity_level_average = immunity_dfs[DEATH].loc[str(date.today()), "average"]
+    current_death_immunity_level_upper = immunity_dfs[DEATH].loc[str(date.today()), "upper"]
     # TODO: remove this: st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
     st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to covid is:</h4>", unsafe_allow_html=True)
     # TODO: Clean this up/create a function for this html
@@ -66,10 +74,10 @@ if submit_button:
         f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
         f"<br>against getting symptomatic covid</h5>"
         f"<h4 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
-        # f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
+        f"{current_hospitalisation_immunity_level_lower:.0f}-{current_hospitalisation_immunity_level_upper:.0f}%"
         f"<br>against hospitalisation</h4>"
         f"<h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
-        # f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
+        f"{current_death_immunity_level_lower:.0f}-{current_death_immunity_level_upper:.0f}%"
         f"<br>against death</h5></div><hr>", unsafe_allow_html=True
     )
 
@@ -85,5 +93,13 @@ if submit_button:
     st_centre.plotly_chart(fig_timeline, use_container_width=True)
 
     # Symptomatic immunity plot
-    fig_symptomatic_immunity = get_plotly_figure(df_symptomatic_immunity)
+    fig_symptomatic_immunity = get_plotly_figure(immunity_dfs[SYMPTOMATIC], "Symptomatic infection")
+    st_centre.plotly_chart(fig_symptomatic_immunity, use_container_width=True)
+
+    # Hospitalisation plot
+    fig_symptomatic_immunity = get_plotly_figure(immunity_dfs[HOSPITALISATION], "Hospitalisation")
+    st_centre.plotly_chart(fig_symptomatic_immunity, use_container_width=True)
+
+    # Death plot
+    fig_symptomatic_immunity = get_plotly_figure(immunity_dfs[DEATH], "Death")
     st_centre.plotly_chart(fig_symptomatic_immunity, use_container_width=True)

@@ -310,5 +310,5 @@ def get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type
     return immunity_df
 
 
-def get_immunity(dose_number, vaccine_type):
+def get_immunity_raw(dose_number, vaccine_type):
     return {immunity_type: get_immunity_specific_immunity_type(dose_number, vaccine_type, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
