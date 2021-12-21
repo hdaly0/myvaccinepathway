@@ -1,5 +1,10 @@
 from datetime import date
 
+# Variant type
+DELTA = "delta"
+OMICRON = "omicron"
+ALLOWED_VARIANT_TYPES = [DELTA, OMICRON]
+
 # Dose number
 DOSE_1 = "dose_1"
 DOSE_2 = "dose_2"
@@ -20,11 +25,12 @@ DEATH = "death"
 ALLWED_IMMUNITY_TYPES = [SYMPTOMATIC, HOSPITALISATION, DEATH]
 
 INDEX = "delay"
-COLUMNS = ["lower", "average", "upper"]
+LOWER, AVERAGE, UPPER = "lower", "average", "upper"
+COLUMNS = [LOWER, AVERAGE, UPPER]
 
 # Streamlit
 DEFAULT_JAB_DATE = {
     1: date(2021, 4, 1),
     2: date(2021, 6, 1),
-    3: date(2021, 12, 1),
+    3: date(2021, 12, 14),
 }

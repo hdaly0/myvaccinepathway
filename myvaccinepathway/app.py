@@ -1,11 +1,13 @@
 import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
-from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, SYMPTOMATIC, HOSPITALISATION, DEATH
+from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, SYMPTOMATIC, HOSPITALISATION, \
+    DEATH, ALLOWED_VARIANT_TYPES, OMICRON
 
 from computation_functions import get_immunity, create_doses, get_start_and_end_dates
-from plotting_functions import get_plotly_timeline, get_plotly_figure
-from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS, DISCLAIMER, PRODUCT_STAGES
+from plotting_functions import get_plotly_timeline, get_plotly_figure, get_plotly_figure_error_bars
+from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS_DELTA_DATA, DISCLAIMER, PRODUCT_STAGES, \
+    ASSUMPTIONS_OMICRON_DATA
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
@@ -21,7 +23,8 @@ st_centre.markdown(PRODUCT_STAGES, unsafe_allow_html=True)
 st_centre.markdown(DISCLAIMER, unsafe_allow_html=True)
 
 # Assumptions
-st_centre.markdown(ASSUMPTIONS, unsafe_allow_html=True)
+st_centre.markdown(ASSUMPTIONS_DELTA_DATA, unsafe_allow_html=True)
+st_centre.markdown(ASSUMPTIONS_OMICRON_DATA, unsafe_allow_html=True)
 
 # Gather information
 st_centre.subheader("Enter your information:")
@@ -42,6 +45,8 @@ with st_centre.form(key='user_info_form'):
                           value=DEFAULT_JAB_DATE.get(dose_number, date.today() - timedelta(180)))
         )
 
+    variant_type = st.radio("Covid variant", options=ALLOWED_VARIANT_TYPES, value=OMICRON)
+
     submit_button = st.form_submit_button(label='Submit')
 
 
@@ -52,7 +57,7 @@ if submit_button:
     start_date, end_date = get_start_and_end_dates(doses)
 
     # Get current immunity
-    immunity_dfs = {immunity_type: get_immunity(doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
+    immunity_dfs = {immunity_type: get_immunity(variant_type, doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
 
     # Print current immunity levels
     current_symptomatic_immunity_level_lower = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "lower"]
