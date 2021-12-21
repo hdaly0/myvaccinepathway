@@ -1,5 +1,6 @@
 import plotly.express as px
-from constants import COLUMNS, INDEX
+import plotly.graph_objs as go
+from constants import COLUMNS, LOWER, AVERAGE, UPPER, INDEX
 from datetime import date
 
 
@@ -15,8 +16,44 @@ def get_plotly_figure(df, immunity_type):
                   template=PLOTLY_THEME)
     fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across", fixedrange=True)
     fig.update_yaxes(tickformat=".1%", range=[0, 1], fixedrange=True)
+    fig.update_layout(spikedistance=1000, hovermode="x", showlegend=False)
+    fig.update_traces(mode="lines", hovertemplate=None)
+
+    # Add vertical line for today
+    fig.add_vline(x=date.today(), line_width=2)
+
+    return fig
+
+
+def get_plotly_figure_error_bars(df, immunity_type):
+    fig = go.Figure([
+        go.Scatter(
+            x=df.index,
+            y=df[AVERAGE] / 100.0,
+            # labels={INDEX: "Date", "value": "Immunity Level"},
+        ),
+        go.Scatter(
+            x=df.index,
+            y=df[UPPER] / 100.0,
+            mode='lines',
+            line={"width": 0},
+            showlegend=False,
+        ),
+        go.Scatter(
+            x=df.index,
+            y=df[LOWER] / 100.0,
+            mode='lines',
+            line={"width": 0},
+            showlegend=False,
+            fill='tonexty',
+        ),
+    ])
+    fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across", fixedrange=True)
+    fig.update_yaxes(tickformat=".1%", range=[0, 1], fixedrange=True)
     fig.update_layout(spikedistance=1000, hovermode="x")
     fig.update_traces(mode="lines", hovertemplate=None)
+            # title=f"Immunity from {immunity_type}",
+            # template=PLOTLY_THEME)
 
     # Add vertical line for today
     fig.add_vline(x=date.today(), line_width=2)
