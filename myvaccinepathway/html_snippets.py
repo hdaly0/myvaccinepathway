@@ -46,10 +46,10 @@ is also only a <b>model</b> of expected behaviour from the limited omicron data 
 will be updated with real-world data as and when it becomes available.</p>
 <p>The data presented is from <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-48-global-omicron/" target="_blank">this paper by Imperial College London</a>.</p>
 <ul>
-  <li>Dose 1 immunity levels were assumed to be 1/2 dose 2 immunity levels as dose 1 immunity data was unavailable</li>
+  <li>Dose 1 immunity levels were assumed to be 1/2 dose 2 immunity levels. Dose 1 immunity data was unavailable.</li>
   <li>Some dose 2 data, and some booster jab data, was extrapolated based on patterns in the data that were available. For full details see comments in the code on <a href="https://github.com/hdaly0/myvaccinepathway" target="_blank">github</a>.</li>
   <li>Dose 3 onwards are assumed to be Pfizer. Moderna jabs (primary and booster) are likely to have similar, if not higher, immunity values to Pfizer, so the Pfizer data provides a realistic lower bound for Moderna vaccinated individuals</li>
-  <li>Moderna data for the Omincron variant is not currently published so Pfizer data is used in its place. As above, this is should be a reasonable lower bound for Moderna vaccinated individuals.</li>
+  <li>Moderna data for the Omincron variant is not currently published so Pfizer data is used in its place. As above, this should be a reasonable lower bound for Moderna vaccinated individuals.</li>
 </ul>
 <hr>
 """
@@ -61,3 +61,9 @@ MODERNA_OMICRON_DATA_WARNING = """
 MODERNA_DELTA_DATA_WARNING = """
 <p style="color: orange; text-align: center;">Warning: Moderna data for hospitalisation and death is limited so Pfizer data has been used in its place here. See Assumptions</p>
 """
+
+# TODO
+ABOUT_US = """"""
+
+# TODO
+WHAT_IMMUNITY_LEVEL_MEANS = """"""
