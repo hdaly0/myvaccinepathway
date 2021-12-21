@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
 from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, SYMPTOMATIC, HOSPITALISATION, \
-    DEATH, ALLOWED_VARIANT_TYPES, OMICRON
+    DEATH, ALLOWED_VARIANT_TYPES, OMICRON, MODERNA, DELTA
 
 from computation_functions import get_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure, get_plotly_figure_error_bars
 from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS_DELTA_DATA, DISCLAIMER, PRODUCT_STAGES, \
-    ASSUMPTIONS_OMICRON_DATA
+    ASSUMPTIONS_OMICRON_DATA, MODERNA_OMICRON_DATA_WARNING, MODERNA_DELTA_DATA_WARNING
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
@@ -21,10 +21,6 @@ st_centre.markdown(PRODUCT_STAGES, unsafe_allow_html=True)
 
 # Disclaimer
 st_centre.markdown(DISCLAIMER, unsafe_allow_html=True)
-
-# Assumptions
-st_centre.markdown(ASSUMPTIONS_DELTA_DATA, unsafe_allow_html=True)
-st_centre.markdown(ASSUMPTIONS_OMICRON_DATA, unsafe_allow_html=True)
 
 # Gather information
 st_centre.subheader("Enter your information:")
@@ -44,14 +40,25 @@ with st_centre.form(key='user_info_form'):
             st.date_input(f"Dose {dose_number} date",
                           value=DEFAULT_JAB_DATE.get(dose_number, date.today() - timedelta(180)))
         )
+        if (dose_number == 2) and (number_of_doses > 2):
+            st.markdown("<p>Note: Jabs 3 and onward are assumed to be Pfizer. See Assumptions</p>",
+                               unsafe_allow_html=True)
 
-    variant_type = st.radio("Covid variant", options=ALLOWED_VARIANT_TYPES, value=OMICRON)
+    variant_type = st.radio("Covid variant", options=ALLOWED_VARIANT_TYPES, index=1)
 
     submit_button = st.form_submit_button(label='Submit')
 
 
 # Only load the plots after submit button has been clicked
 if submit_button:
+    # Present any data warnings for incomplete data
+    # Moderna
+    if (vaccine_type == MODERNA) and (variant_type == OMICRON):
+        st_centre.markdown(MODERNA_OMICRON_DATA_WARNING, unsafe_allow_html=True)
+
+    if (vaccine_type == MODERNA) and (variant_type == DELTA):
+        st_centre.markdown(MODERNA_DELTA_DATA_WARNING, unsafe_allow_html=True)
+
     # Get doses and related details
     doses = create_doses(dose_dates, vaccine_type)
     start_date, end_date = get_start_and_end_dates(doses)
@@ -108,3 +115,9 @@ if submit_button:
     # Death plot
     fig_symptomatic_immunity = get_plotly_figure(immunity_dfs[DEATH], "Death")
     st_centre.plotly_chart(fig_symptomatic_immunity, use_container_width=True)
+
+    # Assumptions
+    if variant_type == DELTA:
+        st_centre.markdown(ASSUMPTIONS_DELTA_DATA, unsafe_allow_html=True)
+    if variant_type == OMICRON:
+        st_centre.markdown(ASSUMPTIONS_OMICRON_DATA, unsafe_allow_html=True)
