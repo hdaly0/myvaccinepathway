@@ -7,7 +7,8 @@ from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_T
 from computation_functions import get_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure, get_plotly_figure_error_bars
 from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS_DELTA_DATA, DISCLAIMER, PRODUCT_STAGES, \
-    ASSUMPTIONS_OMICRON_DATA, MODERNA_OMICRON_DATA_WARNING, MODERNA_DELTA_DATA_WARNING
+    ASSUMPTIONS_OMICRON_DATA, MODERNA_OMICRON_DATA_WARNING, MODERNA_DELTA_DATA_WARNING, WHAT_IMMUNITY_LEVEL_MEANS, \
+    FAQ, ROADMAP, CURRENT_IMMUNITY_TEXT_LAYOUT_3, CURRENT_IMMUNITY_TEXT_LAYOUT_2, CURRENT_IMMUNITY_TEXT_LAYOUT_1
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
@@ -24,7 +25,6 @@ st_centre.markdown(DISCLAIMER, unsafe_allow_html=True)
 
 # Gather information
 st_centre.subheader("Enter your information:")
-# TODO: remove? st_centre.markdown("<h4 style='text-align: center;'>Enter your information:</h4>", unsafe_allow_html=True)
 
 number_of_doses = st_centre.number_input("How many jabs have you had?", value=2)
 
@@ -78,19 +78,20 @@ if submit_button:
     current_death_immunity_level_lower = immunity_dfs[DEATH].loc[str(date.today()), "lower"]
     # current_death_immunity_level_average = immunity_dfs[DEATH].loc[str(date.today()), "average"]
     current_death_immunity_level_upper = immunity_dfs[DEATH].loc[str(date.today()), "upper"]
-    # TODO: remove this: st.subheader(f"Your current immunity to symptomatic covid is: {current_symptomatic_immunity_level*100}%")
-    st_centre.markdown(f"<hr><h4 style='text-align: center;'>Your current immunity to covid is:</h4>", unsafe_allow_html=True)
-    # TODO: Clean this up/create a function for this html
+
+
+    # Display information on what immunity levels actually mean
+    st_centre.markdown(WHAT_IMMUNITY_LEVEL_MEANS, unsafe_allow_html=True)
+
     st_centre.markdown(
-        f"<div><h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
-        f"{current_symptomatic_immunity_level_lower:.0f}-{current_symptomatic_immunity_level_upper:.0f}%"
-        f"<br>against getting symptomatic covid</h5>"
-        f"<h4 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
-        f"{current_hospitalisation_immunity_level_lower:.0f}-{current_hospitalisation_immunity_level_upper:.0f}%"
-        f"<br>against hospitalisation</h4>"
-        f"<h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>"
-        f"{current_death_immunity_level_lower:.0f}-{current_death_immunity_level_upper:.0f}%"
-        f"<br>against death</h5></div><hr>", unsafe_allow_html=True
+        CURRENT_IMMUNITY_TEXT_LAYOUT_3.format(
+            symptomatic_lower=current_symptomatic_immunity_level_lower,
+            symptomatic_upper=current_symptomatic_immunity_level_upper,
+            hospitalisation_lower=current_hospitalisation_immunity_level_lower,
+            hospitalisation_upper=current_hospitalisation_immunity_level_upper,
+            death_lower=current_death_immunity_level_lower,
+            death_upper=current_death_immunity_level_upper
+        ), unsafe_allow_html=True
     )
 
     # Plotly
@@ -121,3 +122,9 @@ if submit_button:
         st_centre.markdown(ASSUMPTIONS_DELTA_DATA, unsafe_allow_html=True)
     if variant_type == OMICRON:
         st_centre.markdown(ASSUMPTIONS_OMICRON_DATA, unsafe_allow_html=True)
+
+    # FAQ
+    st_centre.markdown(FAQ, unsafe_allow_html=True)
+
+    # Roadmap
+    st_centre.markdown(ROADMAP, unsafe_allow_html=True)

@@ -1,8 +1,8 @@
 from datetime import date
 
 # Variant type
-DELTA = "delta"
-OMICRON = "omicron"
+DELTA = "Delta"
+OMICRON = "Omicron"
 ALLOWED_VARIANT_TYPES = [DELTA, OMICRON]
 
 # Dose number
@@ -13,9 +13,9 @@ BOOSTER = "booster"
 ALLOWED_DOSE_NUMBERS = [DOSE_1, DOSE_2, BOOSTER]
 
 # Vaccine type
-ASTRAZENECA = "astrazeneca"
-PFIZER = "pfizer"
-MODERNA = "moderna"
+ASTRAZENECA = "AstraZeneca"
+PFIZER = "Pfizer"
+MODERNA = "Moderna"
 ALLOWED_VACCINE_TYPES = [ASTRAZENECA, PFIZER, MODERNA]
 
 # Immunity type

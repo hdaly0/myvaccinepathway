@@ -55,7 +55,6 @@ def get_immunity(variant_type, doses, start_date, end_date, immunity_type):
         dose_date = str(dose.dose_date)
 
         # Real data
-        # Just symptomatic for now
         vaccine_immunity = dose.get_immunity(variant_type, immunity_type).copy()
         vaccine_immunity.index = pd.date_range(dose.dose_date, dose.dose_date + timedelta(int(vaccine_immunity.index.max())))
         plateau_values = vaccine_immunity.iloc[-1]

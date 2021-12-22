@@ -3,8 +3,8 @@ DISCLAIMER = """
 Whilst we endeavour to display the most accurate information available, and have taken our data from reliable scientific studies,
 you should not use the provided data to make any healthcare or life decisions. Always follow the scientific guidance,
 wear a mask, wash your hands, and social distance. The information provided is intended to more easily present information
-in the scientific literature to give people an idea of how covid immunity levels vary by vaccine, time, age, and health
-of individuals. We do not guarantee we have copied across the data correctly, or interpreted the data correctly. We hold
+in the scientific literature to give people an idea of how covid immunity levels vary by vaccine, time, and covid variant. 
+We do not guarantee we have copied across the data correctly, or interpreted the data correctly. We hold
 no responsibility or liability for any of the information displayed or consequences resulting from this website.
 <hr>
 """
@@ -65,5 +65,111 @@ MODERNA_DELTA_DATA_WARNING = """
 # TODO
 ABOUT_US = """"""
 
-# TODO
-WHAT_IMMUNITY_LEVEL_MEANS = """"""
+WHAT_IMMUNITY_LEVEL_MEANS = """
+<hr>
+<p style="font-size: 25px; text-align: center;">
+    <b>Immunity</b> is how much 
+    <b>less</b> likely you are to catch covid, require hospital treatment, or die 
+    <b>compared to being unvaccinated</b>.
+</p>
+<hr>
+"""
+
+WHAT_IMMUNITY_LEVEL_MEANS_2 = """
+<hr>
+<p style="font-size: 25px; text-align: center;">
+    <b>Immunity</b> is how much your chance of getting symptoms, requiring hospital treatment, or dying from covid
+    is <b>reduced</b> by being vaccinated.
+</p>
+"""
+
+FAQ = """
+<h4 style="text-align: center;">FAQ</h4>
+<h6>Why is there a range in my immunity?</h6>
+<p>
+    The value of "immunity" is actually a measurement of how well the vaccine has worked in the wider population 
+    ("vaccine effectiveness"). 
+    As with all measurements, there are always uncertainties associated with the measurement. For vaccine data, these
+    uncertainties arise because of limited amounts of data, limited data quality, and how the vaccine affects different 
+    people differently (i.e. dependent of their age, health, gender, ethnicity, etc.), among other things. The ranges 
+    present the uncertainty present due to multiple factors. 
+    For more information see <a href="https://www.who.int/news-room/feature-stories/detail/vaccine-efficacy-effectiveness-and-protection" target="_blank">this World Health Organisation article</a>.
+</p>
+<hr>
+"""
+
+ROADMAP = """
+<h4 style="text-align: center;">MyVaccinePathway roadmap</h4>
+<p>
+    MyVaccinePathway is a personal project. Development happens in our spare time so we do no have a timeline 
+    for future features, but the following are on our list to implement:
+</p>
+<ul>
+  <li>Age-based immunity data</li>
+  <li>Immunity data for immunocompromised individuals</li>
+  <li>Immunity provided by prior covid infection</li>
+  <li>Further Omicron data when it becomes available</li>
+  <li>More detailed Moderna vaccine data when it becomes available</li>
+  <li>Data for more vaccine types</li>
+</ul>
+<hr>
+"""
+
+CURRENT_IMMUNITY_TEXT_LAYOUT_1 = """
+<h4 style='text-align: center;'>Your current immunity levels:</h4>
+<div>
+    <h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        {symptomatic_lower:.0f}-{symptomatic_upper:.0f}%
+        <br>against getting symptomatic covid
+    </h5>
+    <h4 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        {hospitalisation_lower:.0f}-{hospitalisation_upper:.0f}%
+        <br>against hospitalisation
+    </h4>
+    <h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        {death_lower:.0f}-{death_upper:.0f}%
+        <br>against death
+    </h5>
+</div>
+<hr>
+"""
+
+CURRENT_IMMUNITY_TEXT_LAYOUT_2 = """
+<div>
+    <h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        You are<br>
+        {symptomatic_lower:.0f}-{symptomatic_upper:.0f}%
+        <br>less likely to get symptomatic covid than before you were vaccinated
+    </h5>
+    <h4 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        You are<br>
+        {hospitalisation_lower:.0f}-{hospitalisation_upper:.0f}%
+        <br>less likely to require hospital treatment for covid than before you were vaccinated
+    </h4>
+    <h5 style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+        You are<br>
+        {death_lower:.0f}-{death_upper:.0f}%
+        <br>less likely to die from covid than before you were vaccinated
+    </h5>
+</div>
+<hr>
+"""
+
+CURRENT_IMMUNITY_TEXT_LAYOUT_3 = """
+<h4 style='text-align: center;'>
+    Your current immunity levels:<br><br>You are:
+</h4>
+<div style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+    <h4>{symptomatic_lower:.0f}-{symptomatic_upper:.0f}%</h4>
+    <p><b>less likely</b> to get <b>symptomatic covid</b> than before you were vaccinated</p>
+</div>
+<div style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+    <h4>{hospitalisation_lower:.0f}-{hospitalisation_upper:.0f}%</h4>
+    <p><b>less likely</b> to require <b>hospital treatment</b> for covid than before you were vaccinated</p>
+</div>
+<div style='text-align: center; box-sizing: border-box; float: left; width: 33.33%; padding: 10px;'>
+    <h4>{death_lower:.0f}-{death_upper:.0f}%</h4>
+    <p><b>less likely to die</b> from covid than before you were vaccinated</p>
+</div>
+<hr>
+"""
