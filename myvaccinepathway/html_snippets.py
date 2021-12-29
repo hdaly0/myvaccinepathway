@@ -74,8 +74,8 @@ ASSUMPTIONS_OMICRON_DATA = """
 OMICRON_DATA_WARNING = """
 <p style="color: orange; text-align: center;">
     <b>Note:</b> Omicron data is still limited since the variant has not been around long, so the full effects are still unknown.
-    The data presented here is from a model that uses some of the limited real-world data available, however newer data
-    being published (see <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-50-severity-omicron/" target="_blank">this study</a> for example) 
+    The data presented here is from a model that uses some of the real-world data available. Newer data
+    coming to light (see <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-50-severity-omicron/" target="_blank">this study</a> for example) 
     is hinting towards the Omicron variant causing less severe illness, however this is still not confirmed.
 </p>
 """

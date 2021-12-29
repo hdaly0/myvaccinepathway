@@ -53,6 +53,10 @@ if submit_button:
     if (vaccine_type == MODERNA) and (variant_type == DELTA):
         st_centre.markdown(MODERNA_DELTA_DATA_WARNING, unsafe_allow_html=True)
 
+    # Omicron
+    if variant_type == OMICRON:
+        st_centre.markdown(OMICRON_DATA_WARNING, unsafe_allow_html=True)
+
     # Get doses and related details
     doses = create_doses(dose_dates, vaccine_type)
     start_date, end_date = get_start_and_end_dates(doses)
@@ -83,10 +87,6 @@ if submit_button:
             death_upper=current_death_immunity_level_upper
         ), unsafe_allow_html=True
     )
-
-    # Omicron data warning
-    if variant_type == OMICRON:
-        st_centre.markdown(OMICRON_DATA_WARNING, unsafe_allow_html=True)
 
     # Plotly
     # Timeline plot
