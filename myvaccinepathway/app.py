@@ -6,31 +6,26 @@ from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_T
 
 from computation_functions import get_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure, get_plotly_figure_error_bars
-from html_snippets import CURRENT_PRODUCT_STAGE, ASSUMPTIONS_DELTA_DATA, DISCLAIMER, PRODUCT_STAGES, \
+from html_snippets import HEAD_TITLE, ASSUMPTIONS_DELTA_DATA, DISCLAIMER, PRODUCT_STAGES, \
     ASSUMPTIONS_OMICRON_DATA, MODERNA_OMICRON_DATA_WARNING, MODERNA_DELTA_DATA_WARNING, WHAT_IMMUNITY_LEVEL_MEANS, \
-    FAQ, ROADMAP, CURRENT_IMMUNITY_TEXT_LAYOUT_3, CURRENT_IMMUNITY_TEXT_LAYOUT_2, CURRENT_IMMUNITY_TEXT_LAYOUT_1
+    FAQ, ROADMAP, CURRENT_IMMUNITY_TEXT_LAYOUT_3, \
+    ABOUT_US, REFERENCE_DELTA_DATA, REFERENCE_OMICRON_DATA, OMICRON_DATA_WARNING
 
 # User input and streamlit page order
 st.set_page_config(layout="wide")
 st_left, st_centre, st_right = st.columns((1, 4, 1))
 
 # Header
-st_centre.markdown(CURRENT_PRODUCT_STAGE, unsafe_allow_html=True)
-
-# Product stage - alpha, beta, gamma
-st_centre.markdown(PRODUCT_STAGES, unsafe_allow_html=True)
-
-# Disclaimer
-st_centre.markdown(DISCLAIMER, unsafe_allow_html=True)
+st_centre.markdown(HEAD_TITLE, unsafe_allow_html=True)
 
 # Gather information
-st_centre.subheader("Enter your information:")
+st_centre.subheader("Fill in your details:")
 
-number_of_doses = st_centre.number_input("How many jabs have you had?", value=2)
+number_of_doses = st_centre.number_input("How many covid jabs have you had?", value=2)
 
 # Use form with submit button so page doesn't recalculate every time, only on submit
 with st_centre.form(key='user_info_form'):
-    st.write("Input your vaccination details")
+    # st.write("Input your vaccination details")
     vaccine_type = st.radio("Vaccine type", options=ALLOWED_VACCINE_TYPES)
 
     dose_dates = []
@@ -44,9 +39,9 @@ with st_centre.form(key='user_info_form'):
             st.markdown("<p>Note: Jabs 3 and onward are assumed to be Pfizer. See Assumptions</p>",
                                unsafe_allow_html=True)
 
-    variant_type = st.radio("Covid variant", options=ALLOWED_VARIANT_TYPES, index=1)
+    variant_type = st.radio("Choose covid variant", options=ALLOWED_VARIANT_TYPES, index=1)
 
-    submit_button = st.form_submit_button(label='Submit')
+    submit_button = st.form_submit_button(label='Show results')
 
 
 # Only load the plots after submit button has been clicked
@@ -63,10 +58,12 @@ if submit_button:
     doses = create_doses(dose_dates, vaccine_type)
     start_date, end_date = get_start_and_end_dates(doses)
 
+    # Display information on what immunity levels actually mean
+    st_centre.markdown(WHAT_IMMUNITY_LEVEL_MEANS, unsafe_allow_html=True)
+
     # Get current immunity
     immunity_dfs = {immunity_type: get_immunity(variant_type, doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
 
-    # Print current immunity levels
     current_symptomatic_immunity_level_lower = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "lower"]
     # current_symptomatic_immunity_level_average = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "average"]
     current_symptomatic_immunity_level_upper = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "upper"]
@@ -79,10 +76,7 @@ if submit_button:
     # current_death_immunity_level_average = immunity_dfs[DEATH].loc[str(date.today()), "average"]
     current_death_immunity_level_upper = immunity_dfs[DEATH].loc[str(date.today()), "upper"]
 
-
-    # Display information on what immunity levels actually mean
-    st_centre.markdown(WHAT_IMMUNITY_LEVEL_MEANS, unsafe_allow_html=True)
-
+    # Display current immunity
     st_centre.markdown(
         CURRENT_IMMUNITY_TEXT_LAYOUT_3.format(
             symptomatic_lower=current_symptomatic_immunity_level_lower,
@@ -93,6 +87,10 @@ if submit_button:
             death_upper=current_death_immunity_level_upper
         ), unsafe_allow_html=True
     )
+
+    # Omicron data warning
+    if variant_type == OMICRON:
+        st_centre.markdown(OMICRON_DATA_WARNING, unsafe_allow_html=True)
 
     # Plotly
     # Timeline plot
@@ -119,12 +117,23 @@ if submit_button:
 
     # Assumptions
     if variant_type == DELTA:
+        st_centre.markdown(REFERENCE_DELTA_DATA, unsafe_allow_html=True)
         st_centre.markdown(ASSUMPTIONS_DELTA_DATA, unsafe_allow_html=True)
     if variant_type == OMICRON:
+        st_centre.markdown(REFERENCE_OMICRON_DATA, unsafe_allow_html=True)
         st_centre.markdown(ASSUMPTIONS_OMICRON_DATA, unsafe_allow_html=True)
+
+    # Disclaimer
+    st_centre.markdown(DISCLAIMER, unsafe_allow_html=True)
 
     # FAQ
     st_centre.markdown(FAQ, unsafe_allow_html=True)
+
+    # About
+    st_centre.markdown(ABOUT_US, unsafe_allow_html=True)
+
+    # Product stage - alpha, beta, gamma
+    st_centre.markdown(PRODUCT_STAGES, unsafe_allow_html=True)
 
     # Roadmap
     st_centre.markdown(ROADMAP, unsafe_allow_html=True)
