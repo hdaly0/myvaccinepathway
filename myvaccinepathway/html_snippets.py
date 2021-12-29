@@ -9,27 +9,36 @@ no responsibility or liability for any of the information displayed or consequen
 <hr>
 """
 
-CURRENT_PRODUCT_STAGE = """
+HEAD_TITLE = """
 <div style="text-align: center;">
-    <h1 style="display:inline;">My vaccine pathway: </h1><h1 style="color: blue; display: inline;">βeta</h1>
+    <h1 style="display:inline;">My Vaccine Pathway</h1>
+    <br>
+    <br>
+    <h3 style="display:inline;">What is my current covid immunity?</h3>
 </div>
 <hr>
 """
 
 PRODUCT_STAGES = """
-<h4 style="text-align: center;">Product stages</h4>
-<p style="color: red; display: inline;">αlpha</p>: \tproduct not complete and still under development. Data not correct or referenced.<br>
-<p style="color: blue; display: inline;">βeta</p>: \tproduction stage:Minimum viable product complete. Real data sourced from academic literature used. Not all features implemented.<br>
-<p style="color: gold; display: inline;">γamma</p>: \tfinal offering: All features required are offered.<br>
+<h4 style="text-align: center;">Current product stage: <h4 style="color: blue; display: inline;">βeta</h4></h4>
+<p style="color: red; display: inline;">αlpha</p>: \tProduct not complete and still under development. Data not correct or referenced.<br>
+<p style="color: blue; display: inline;">βeta</p>: \tProduction stage: Minimum viable product complete. Real data sourced from academic literature used. Not all features implemented.<br>
+<p style="color: gold; display: inline;">γamma</p>: \tFinal offering: All desired features are implemented.<br>
 <hr>
+"""
+
+REFERENCE_DELTA_DATA = """
+<h4 style="text-align: center;">References: Delta variant data</h4>
+<p>
+    The data presented is from <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1029794/S1411_VEEP_Vaccine_Effectiveness_Table_.pdf" target="_blank">this paper by SAGE</a>, the UK Government's Scientific Advisory group, 
+    <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1017309/S1362_PHE_duration_of_protection_of_COVID-19_vaccines_against_clinical_disease.pdf" target="_blank">this paper by Public Health England</a>, 
+    and <a href="https://www.health.gov.au/initiatives-and-programs/covid-19-vaccines/is-it-true/is-it-true-how-long-does-it-take-to-have-immunity-after-vaccination" target="_blank">this site</a> by the Australian Government's Department of Health.
+</p>
 """
 
 ASSUMPTIONS_DELTA_DATA = """
 <hr>
 <h4 style="text-align: center;">Assumptions: Delta variant data</h4>
-<p>The data presented is from <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1029794/S1411_VEEP_Vaccine_Effectiveness_Table_.pdf" target="_blank">this paper by SAGE</a>, the UK Government's Scientific Advisory group,
- <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1017309/S1362_PHE_duration_of_protection_of_COVID-19_vaccines_against_clinical_disease.pdf" target="_blank">this paper by Public Health England</a>,
- and <a href="https://www.health.gov.au/initiatives-and-programs/covid-19-vaccines/is-it-true/is-it-true-how-long-does-it-take-to-have-immunity-after-vaccination" target="_blank">this site</a> by the Australian Government's Department of Health.</p>
 <ul>
   <li>Doses 1 and 2 were of the same type. I.e. either both doses 1 and 2 were AstraZeneca, Pfizer, or Moderna, but not a combination of the three.</li>
   <li>Doses 3 and onwards are assumed to be Pfizer jabs since these are generally the boosters and 3rd jabs on offer in the UK.</li>
@@ -38,13 +47,21 @@ ASSUMPTIONS_DELTA_DATA = """
 <hr>
 """
 
+REFERENCE_OMICRON_DATA = """
+<h4 style="text-align: center;">References: Omicron variant data</h4>
+<p>
+    Data is only available for primary doses of Astrazeneca and Pfizer, coupled with a Pfizer booster. The data presented
+    is also only a <b>model</b> of expected behaviour from the limited omicron data available and previous covid behaviours seen. The data
+    will be updated with real-world data as and when it becomes available.
+</p>
+<p>
+    The data presented is from <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-48-global-omicron/" target="_blank">this paper by Imperial College London</a>.
+</p>
+"""
+
 ASSUMPTIONS_OMICRON_DATA = """
 <hr>
 <h4 style="text-align: center;">Assumptions: Omicron variant data</h4>
-<p>Data is only available for primary doses of Astrazeneca and Pfizer, coupled with a Pfizer booster. The data presented
-is also only a <b>model</b> of expected behaviour from the limited omicron data available and previous covid behaviours seen. The data
-will be updated with real-world data as and when it becomes available.</p>
-<p>The data presented is from <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-48-global-omicron/" target="_blank">this paper by Imperial College London</a>.</p>
 <ul>
   <li>Dose 1 immunity levels were assumed to be 1/2 dose 2 immunity levels. Dose 1 immunity data was unavailable.</li>
   <li>Some dose 2 data, and some booster jab data, was extrapolated based on patterns in the data that were available. For full details see comments in the code on <a href="https://github.com/hdaly0/myvaccinepathway" target="_blank">github</a>.</li>
@@ -52,6 +69,15 @@ will be updated with real-world data as and when it becomes available.</p>
   <li>Moderna data for the Omincron variant is not currently published so Pfizer data is used in its place. As above, this should be a reasonable lower bound for Moderna vaccinated individuals.</li>
 </ul>
 <hr>
+"""
+
+OMICRON_DATA_WARNING = """
+<p style="color: orange; text-align: center;">
+    <b>Note:</b> Omicron data is still limited since the variant has not been around long, so the full effects are still unknown.
+    The data presented here is from a model that uses some of the limited real-world data available, however newer data
+    being published (see <a href="https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/covid-19/report-50-severity-omicron/" target="_blank">this study</a> for example) 
+    is hinting towards the Omicron variant causing less severe illness, however this is still not confirmed.
+</p>
 """
 
 MODERNA_OMICRON_DATA_WARNING = """
@@ -62,8 +88,6 @@ MODERNA_DELTA_DATA_WARNING = """
 <p style="color: orange; text-align: center;">Warning: Moderna data for hospitalisation and death is limited so Pfizer data has been used in its place here. See Assumptions</p>
 """
 
-# TODO
-ABOUT_US = """"""
 
 WHAT_IMMUNITY_LEVEL_MEANS = """
 <hr>
@@ -171,5 +195,18 @@ CURRENT_IMMUNITY_TEXT_LAYOUT_3 = """
     <h4>{death_lower:.0f}-{death_upper:.0f}%</h4>
     <p><b>less likely to die</b> from covid than before you were vaccinated</p>
 </div>
+<hr>
+"""
+
+ABOUT_US = """
+<h4 style="text-align: center;">About</h4>
+<p>
+    This app is a personal project that came about because of a desire to know our current immunity levels. We couldn't 
+    find a simple application to tell us this information, so we decided to build one. The code for this app is open source
+    and can be found on <a href="https://github.com/hdaly0/myvaccinepathway" target="_blank">github</a>.
+</p>
+<p>
+    Feedback and suggestions can be emailed to myvaccinepathway [at] gmail [dot] com
+</p>
 <hr>
 """
