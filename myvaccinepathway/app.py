@@ -25,7 +25,6 @@ number_of_doses = st_centre.number_input("How many covid jabs have you had?", va
 
 # Use form with submit button so page doesn't recalculate every time, only on submit
 with st_centre.form(key='user_info_form'):
-    # st.write("Input your vaccination details")
     vaccine_type = st.radio("Vaccine type", options=ALLOWED_VACCINE_TYPES)
 
     dose_dates = []
@@ -65,15 +64,12 @@ if submit_button:
     immunity_dfs = {immunity_type: get_immunity(variant_type, doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
 
     current_symptomatic_immunity_level_lower = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "lower"]
-    # current_symptomatic_immunity_level_average = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "average"]
     current_symptomatic_immunity_level_upper = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "upper"]
 
     current_hospitalisation_immunity_level_lower = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "lower"]
-    # current_hospitalisation_immunity_level_average = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "average"]
     current_hospitalisation_immunity_level_upper = immunity_dfs[HOSPITALISATION].loc[str(date.today()), "upper"]
 
     current_death_immunity_level_lower = immunity_dfs[DEATH].loc[str(date.today()), "lower"]
-    # current_death_immunity_level_average = immunity_dfs[DEATH].loc[str(date.today()), "average"]
     current_death_immunity_level_upper = immunity_dfs[DEATH].loc[str(date.today()), "upper"]
 
     # Display current immunity
