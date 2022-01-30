@@ -1,6 +1,7 @@
 import pandas as pd
-from constants import DOSE_1, ASTRAZENECA, SYMPTOMATIC, HOSPITALISATION, DEATH, PFIZER, MODERNA, DOSE_2, BOOSTER, INDEX, \
-    COLUMNS, ALLOWED_DOSE_NUMBERS, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, DELTA, OMICRON, ALLOWED_VARIANT_TYPES
+from constants import DOSE_1, ASTRAZENECA, SYMPTOMATIC, HOSPITALISATION, DEATH, PFIZER, MODERNA, DOSE_2, \
+    PFIZER_BOOSTER, MODERNA_BOOSTER, INDEX, COLUMNS, ALLOWED_DOSE_NUMBERS, ALLOWED_PRIMARY_VACCINE_TYPES,\
+    ALLOWED_IMMUNITY_TYPES, DELTA, OMICRON, ALLOWED_VARIANT_TYPES
 
 """ Store all real world immunity data """
 INITIAL_IMMUNITY = 0
@@ -259,7 +260,7 @@ IMMUNITY[DELTA] = {
         },
     },
 
-    BOOSTER: {
+    PFIZER_BOOSTER: {
         PFIZER: {
             SYMPTOMATIC: [
 
@@ -280,8 +281,49 @@ IMMUNITY[DELTA][DOSE_2][MODERNA][HOSPITALISATION] = IMMUNITY[DELTA][DOSE_2][PFIZ
 IMMUNITY[DELTA][DOSE_2][MODERNA][DEATH] = IMMUNITY[DELTA][DOSE_2][PFIZER][DEATH]
 
 """===OMICRON========================================================================================================"""
+# Booster
+# HOSPITALISATION: [
+#     # (days_since_jab, immunity(lower, median, upper))
+#     # Source - Table 1
+#     (30, (82.6, 85.5, 87.9)),
+#     (60, (76.3, 80.1, 83.2)),
+#     (90, (68.6, 73.2, 77.3)),
+#     # Source - Figure 1 - data read from graph, at 6month+ looks like it declines to similar value as dose2
+#     # Use dose2 180 day data, but note values continue to decline in graph (i.e. don't plateau here)
+#     (180, (30.0, 35.2, 41.7)),
+# ],
+#
+# DEATH: [
+#     # (days_since_jab, immunity(lower, median, upper))
+#     (30, (89.9, 91.7, 93.2)),
+#     (60, (85.8, 88.3, 90.3)),
+#     (90, (80.4, 83.7, 86.5)),
+# ],
+ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION = [
+    # (days_since_jab, immunity(lower, median, upper))
+    # Source - Table 1
+    # Data is very granular, quoted "2-24 weeks" as 1 time point. Usually this gets converted to the middle date
+    #   but because of the large range, this data was put in at 2 weeks and 13 weeks (the half way point)
+    (14, (54, 64, 71)),
+    (91, (54, 64, 71)),
+    (175, (30, 44, 54)),
+]
+ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH = [
+    # TODO Doesn't exist
+]
+ALL_3_VACCINE_TYPES_AVG_DOSE_3_HOSPITALISATION = [
+    # (days_since_jab, immunity(lower, median, upper))
+    # Source - Table 1
+    (21, (89, 92, 94)),
+    (29, (84, 88, 91)),
+    (70, (78, 83, 87)),
+]
+ALL_3_VACCINE_TYPES_AVG_DOSE_3_DEATH = [
+    #TODO Doesn't exist
+]
+
 IMMUNITY[OMICRON] = {
-    # Source - Imperial/WHO modelling: https://spiral.imperial.ac.uk/bitstream/10044/1/93034/13/2021-12-16%20COVID19%20Report%2048.pdf
+    # Source - UK Gov aggregated from various studies: https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1049160/Vaccine-surveillance-report-week-3-2022.pdf
     DOSE_1: {
         # TODO: Not enough data
         ASTRAZENECA: {
@@ -337,175 +379,172 @@ IMMUNITY[OMICRON] = {
         ASTRAZENECA: {
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-                # Source - Figure 1 - data read from graphs, don't have same ranges as table data
-                # Using ~max table data range above and below median value from graph
-                (14, (22, 24, 26)),
-                # Source - Table 1
-                (90, (7.1, 8.6, 10.6)),
-                (180, (2.7, 3.3, 4.4)),
+                # Source - Figure 1a - data read from graphs
+                (21, (32, 45, 55)),
+                (49, (21, 32, 42)),
+                (84, (17, 26, 35)),
+                (119, (12, 16, 22)),
+                (154, (1, 4, 7)),
+                (175, (0, 0, 2)),
             ],
 
-            HOSPITALISATION: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # Source - Figure 1 - data read from graphs, don't have same ranges as table data
-                # Using ~max table data range above and below median value from graph
-                (14, (64, 68, 72)),
-                # Source - Table 1
-                (90, (32.3, 37.3, 42.9)),
-                (180, (14.8, 17.8, 22.4)),
-            ],
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
 
-            DEATH: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # This value was extrapolated. The ratio of dose2:booster for hospitalisation was used
-                # to extrapolate and approximate this value. I.e. (68.0/85.5)*91.7 - rounded and using largest range
-                # from table data
-                (14, (67, 73, 79)),
-                # Source - Table 1
-                (90, (47.1, 52.6, 58.4)),
-                (180, (24.5, 28.9, 35.1)),
-            ],
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
 
         PFIZER: {
             # Source - Table 1
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-                # Source - Figure 1 - data read from graphs, don't have same ranges as table data
-                # Using ~max table data range above and below median value from graph
-                (14, (36, 40, 44)),
-                # Source - Table 1
-                (90, (15.9, 19.1, 22.7)),
-                (180, (6.4, 7.9, 10.2)),
+                # Source - Figure 1b
+                (21, (61, 64, 67)),
+                (49, (44, 47, 50)),
+                (84, (25, 28, 31)),
+                (119, (12, 15, 18)),
+                (154, (8, 11, 14)),
+                (175, (9, 12, 15)),
             ],
 
-            HOSPITALISATION: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # Source - Figure 1 - data read from graphs, don't have same ranges as table data
-                # Using ~max table data range above and below median value from graph
-                (14, (76, 81, 86)),
-                # Source - Table 1
-                (90, (54.3, 59.8, 65.1)),
-                (180, (30.0, 35.2, 41.7)),
-            ],
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
 
-            DEATH: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # This value was extrapolated. The ratio of dose2:booster for hospitalisation was used
-                # to extrapolate and approximate this value. I.e. (81.0/85.5)*91.7 - rounded and using largest range
-                # from table data
-                (14, (80, 87, 94)),
-                # Source - Table 1
-                (90, (68.9, 73.6, 77.7)),
-                (180, (44.6, 50.4, 57.4)),
-            ],
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
 
         MODERNA: {
-            # TODO: Not enough data
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
+                # Source - Figure 1c
+                (21, (67, 73, 78)),
+                (49, (47, 52, 57)),
+                (84, (31, 34, 38)),
+                (119, (23, 26, 29)),
+                (154, (11, 15, 19)),
+                (175, (0, 10, 24)),
             ],
 
-            HOSPITALISATION: [
-                # (days_since_jab, immunity(lower, median, upper))
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
 
-            ],
-
-            DEATH: [
-                # (days_since_jab, immunity(lower, median, upper))
-
-            ],
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
     },
 
-    BOOSTER: {
-        # All data here is for pfizer booster given the following primary doses
+    PFIZER_BOOSTER: {
+        # Data here is for various vaccine type primary doses + pfizer booster
         ASTRAZENECA: {
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-                # Source - Table 1
-                (30, (43.1, 48.4, 53.3)),
-                (60, (33.9, 38.9, 44.0)),
-                (90, (25.8, 30.2, 35.0)),
-                # Source - Figure 1 - data read from graph, at 6month+ looks like it plateaus to similar value as dose2
-                # Use dose2 180 day data
-                (180, (2.7, 3.3, 4.4)),
+                # Source - Figure 1a
+                (7, (54, 57, 60)),
+                (21, (60, 63, 66)),
+                (49, (52, 54, 57)),
+                (70, (41, 44, 47)),
+                # TODO - add plateau value??
             ],
 
-            HOSPITALISATION: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # Source - Table 1
-                (30, (82.6, 85.5, 87.9)),
-                (60, (76.3, 80.1, 83.2)),
-                (90, (68.6, 73.2, 77.3)),
-                # Source - Figure 1 - data read from graph, at 6month+ looks like it plateaus to similar value as dose2
-                # Use dose2 180 day data
-                (180, (14.8, 17.8, 22.4)),
-            ],
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
 
-            DEATH: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # Source - Table 1
-                (30, (89.9, 91.7, 93.2)),
-                (60, (85.8, 88.3, 90.3)),
-                (90, (80.4, 83.7, 86.5)),
-
-            ],
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
 
         PFIZER: {
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-                # Source - Table 1
-                (30, (43.1, 48.4, 53.5)),
-                (60, (33.9, 38.9, 44.0)),
-                (90, (25.8, 30.2, 35.0)),
+                # Source - Figure 1b
+                (7, (64, 67, 70)),
+                (21, (65, 68, 71)),
+                (49, (54, 57, 60)),
+                (70, (47, 50, 53)),
+                # TODO - add plateau value??
                 # Source - Figure 1 - data read from graph, at 6month+ looks like it plateaus to similar value as dose2
                 # Use dose2 180 day data
-                (180, (6.4, 7.9, 10.2)),
+                # (180, (6.4, 7.9, 10.2)),
             ],
 
-            HOSPITALISATION: [
-                # (days_since_jab, immunity(lower, median, upper))
-                # Source - Table 1
-                (30, (82.6, 85.5, 87.9)),
-                (60, (76.3, 80.1, 83.2)),
-                (90, (68.6, 73.2, 77.3)),
-                # Source - Figure 1 - data read from graph, at 6month+ looks like it declines to similar value as dose2
-                # Use dose2 180 day data, but note values continue to decline in graph (i.e. don't plateau here)
-                (180, (30.0, 35.2, 41.7)),
-            ],
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
 
-            DEATH: [
-                # (days_since_jab, immunity(lower, median, upper))
-                (30, (89.9, 91.7, 93.2)),
-                (60, (85.8, 88.3, 90.3)),
-                (90, (80.4, 83.7, 86.5)),
-            ],
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
 
         MODERNA: {
-            # TODO: Not enough data
             SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
+                # Source - Figure 1c
+                (7, (63, 66, 69)),
+                (21, (63, 67, 71)),
+                # No further omicron moderna booster data available
+                # Use pfizer primary pfizer booster data from same timeframe as lower bound
+                # Source - Figure 1b BNT162b2 booster
+                (49, (54, 57, 60)),
+                (70, (47, 50, 53)),
             ],
 
-            HOSPITALISATION: [
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
+
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
+        },
+    },
+
+    MODERNA_BOOSTER: {
+        # Data here is for various vaccine type primary doses + moderna booster
+        ASTRAZENECA: {
+            SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-
+                # Source - Figure 1a
+                (7, (64, 67, 69)),
+                (21, (67, 70, 73)),
+                (49, (58, 61, 64)),
+                # No further omicron moderna booster data available
+                # Use astrazeneca primary pfizer booster data from same timeframe as lower bound
+                # Source - Figure 1a BNT162b2 booster
+                (70, (41, 44, 47)),
             ],
 
-            DEATH: [
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
+
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
+        },
+
+        PFIZER: {  # Pfizer primary, Moderna booster
+            SYMPTOMATIC: [
                 # (days_since_jab, immunity(lower, median, upper))
-
+                # Source - Figure 1b
+                (7, (71, 74, 77)),
+                (21, (72, 75, 78)),
+                (49, (62, 65, 68)),
+                # No further omicron moderna booster data available
+                # Use pfizer primary pfizer booster data from same timeframe as lower bound
+                # Source - Figure 1b BNT162b2 booster
+                (70, (47, 50, 53)),
             ],
+
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
+
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
+        },
+
+        MODERNA: {
+            SYMPTOMATIC: [
+                # (days_since_jab, immunity(lower, median, upper))
+                # Source - Figure 1c
+                (7, (67, 70, 73)),
+                (21, (64, 68, 72)),
+                # No further omicron moderna booster data available
+                # Use pfizer primary pfizer booster data from same timeframe as lower bound
+                # Source - Figure 1b BNT162b2 booster
+                (49, (54, 57, 60)),
+                (70, (47, 50, 53)),
+            ],
+
+            HOSPITALISATION: ALL_3_VACCINE_TYPES_AVG_DOSE_2_HOSPITALISATION,
+
+            DEATH: ALL_3_VACCINE_TYPES_AVG_DOSE_2_DEATH
         },
     }
 }
 # No Dose 1 omicron data - assume values are half that of dose 2.
 for vaccine_type in [ASTRAZENECA, PFIZER]:
-    for immunity_type in ALLWED_IMMUNITY_TYPES:
+    for immunity_type in ALLOWED_IMMUNITY_TYPES:
         IMMUNITY[OMICRON][DOSE_1][vaccine_type][immunity_type] = [(day, (lower / 2, average / 2, upper / 2))
                                                                  for (day, (lower, average, upper)) in
                                                                  IMMUNITY[OMICRON][DOSE_2][vaccine_type][immunity_type]]
@@ -534,11 +573,11 @@ def get_immunity_specific_immunity_type(variant_type, dose_number, vaccine_type,
     if dose_number not in ALLOWED_DOSE_NUMBERS:
         raise ValueError(f"{dose_number} not in allowed list: {ALLOWED_DOSE_NUMBERS}")
 
-    if vaccine_type not in ALLOWED_VACCINE_TYPES:
-        raise ValueError(f"{vaccine_type} not in allowed list: {ALLOWED_VACCINE_TYPES}")
+    if vaccine_type not in ALLOWED_PRIMARY_VACCINE_TYPES:
+        raise ValueError(f"{vaccine_type} not in allowed list: {ALLOWED_PRIMARY_VACCINE_TYPES}")
 
-    if immunity_type not in ALLWED_IMMUNITY_TYPES:
-        raise ValueError(f"{immunity_type} not in allowed list: {ALLWED_IMMUNITY_TYPES}")
+    if immunity_type not in ALLOWED_IMMUNITY_TYPES:
+        raise ValueError(f"{immunity_type} not in allowed list: {ALLOWED_IMMUNITY_TYPES}")
 
     immunity_datapoints = IMMUNITY[variant_type][dose_number][vaccine_type][immunity_type]
 
@@ -551,7 +590,7 @@ def get_immunity_raw(dose_number, vaccine_type):
     immunity = {}
     for variant_type in ALLOWED_VARIANT_TYPES:
         immunity[variant_type] = {}
-        for immunity_type in ALLWED_IMMUNITY_TYPES:
+        for immunity_type in ALLOWED_IMMUNITY_TYPES:
             immunity[variant_type][immunity_type] = get_immunity_specific_immunity_type(variant_type, dose_number, vaccine_type, immunity_type)
 
     return immunity
