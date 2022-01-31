@@ -7,12 +7,12 @@ from datetime import date
 PLOTLY_THEME = "plotly_white"
 
 
-def get_plotly_figure(df, immunity_type):
+def get_plotly_figure(df, plot_header):
     fig = px.line(df/100.0,
                   x=df.index,
                   y=COLUMNS,
                   labels={INDEX: "Date", "value": "Immunity Level"},
-                  title=f"Immunity from {immunity_type}",
+                  title=plot_header,
                   template=PLOTLY_THEME)
     fig.update_xaxes(showspikes=True, spikecolor="white", spikethickness=0.5, spikesnap="cursor", spikemode="across", fixedrange=True)
     fig.update_yaxes(tickformat=".1%", range=[0, 1], fixedrange=True)
