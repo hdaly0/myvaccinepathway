@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, timedelta
 
-from constants import COLUMNS, INDEX, PFIZER, DOSE_2, DOSE_1
+from constants import COLUMNS, INDEX, PFIZER, DOSE_2, DOSE_1, BOOSTER_TYPE_FROM_VACCINE_MAP
 from data import get_immunity_raw
 
 
@@ -68,20 +68,21 @@ def get_immunity(variant_type, doses, start_date, end_date, immunity_type):
     return immunity_df
 
 
-def create_doses(dose_dates, vaccine_type):
+def create_doses(dose_dates, primary_vaccine_type, secondary_vaccine_type):
+    if (len(dose_dates) > 2) and (secondary_vaccine_type is None):
+        raise ValueError(
+            "Have more than two doses but no secondary vaccine type. Internal logic error must have caused this."
+        )
+
     doses = []
     for dose_number, dose_date in enumerate(dose_dates, start=1):
         if dose_number == 1:
-            current_vaccine_type = vaccine_type
             dose_number_reference = DOSE_1
         elif dose_number == 2:
-            current_vaccine_type = vaccine_type
             dose_number_reference = DOSE_2
         else:
-            # Booster jabs are Pfizer
-            current_vaccine_type = PFIZER
-            dose_number_reference = DOSE_2
-        dose = Dose(dose_date, current_vaccine_type, dose_number_reference)
+            dose_number_reference = BOOSTER_TYPE_FROM_VACCINE_MAP[secondary_vaccine_type]
+        dose = Dose(dose_date, primary_vaccine_type, dose_number_reference)
         doses.append(dose)
 
     return doses

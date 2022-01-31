@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
-from constants import DEFAULT_JAB_DATE, ALLOWED_VACCINE_TYPES, ALLWED_IMMUNITY_TYPES, SYMPTOMATIC, HOSPITALISATION, \
-    DEATH, ALLOWED_VARIANT_TYPES, OMICRON, MODERNA, DELTA
+from constants import DEFAULT_JAB_DATE, ALLOWED_PRIMARY_VACCINE_TYPES, ALLOWED_IMMUNITY_TYPES, SYMPTOMATIC, \
+    HOSPITALISATION, \
+    DEATH, ALLOWED_VARIANT_TYPES, OMICRON, MODERNA, DELTA, ALLOWED_SECONDARY_VACCINE_TYPES
 
 from computation_functions import get_immunity, create_doses, get_start_and_end_dates
 from plotting_functions import get_plotly_timeline, get_plotly_figure, get_plotly_figure_error_bars
@@ -25,7 +26,10 @@ number_of_doses = st_centre.number_input("How many covid jabs have you had?", va
 
 # Use form with submit button so page doesn't recalculate every time, only on submit
 with st_centre.form(key='user_info_form'):
-    vaccine_type = st.radio("Vaccine type", options=ALLOWED_VACCINE_TYPES)
+    primary_vaccine_type = st.radio("Primary vaccine type", options=ALLOWED_PRIMARY_VACCINE_TYPES)
+    secondary_vaccine_type = None
+    if number_of_doses > 2:
+        secondary_vaccine_type = st.radio("Booster/dose 3 vaccine type", options=ALLOWED_SECONDARY_VACCINE_TYPES)
 
     dose_dates = []
     # Allow for variable numbers of doses
@@ -34,9 +38,6 @@ with st_centre.form(key='user_info_form'):
             st.date_input(f"Dose {dose_number} date",
                           value=DEFAULT_JAB_DATE.get(dose_number, date.today() - timedelta(180)))
         )
-        if (dose_number == 2) and (number_of_doses > 2):
-            st.markdown("<p>Note: Jabs 3 and onward are assumed to be Pfizer. See Assumptions</p>",
-                               unsafe_allow_html=True)
 
     variant_type = st.radio("Choose covid variant", options=ALLOWED_VARIANT_TYPES, index=1)
 
@@ -47,10 +48,10 @@ with st_centre.form(key='user_info_form'):
 if submit_button:
     # Present any data warnings for incomplete data
     # Moderna
-    if (vaccine_type == MODERNA) and (variant_type == OMICRON):
+    if (primary_vaccine_type == MODERNA) and (variant_type == OMICRON):
         st_centre.markdown(MODERNA_OMICRON_DATA_WARNING, unsafe_allow_html=True)
 
-    if (vaccine_type == MODERNA) and (variant_type == DELTA):
+    if (primary_vaccine_type == MODERNA) and (variant_type == DELTA):
         st_centre.markdown(MODERNA_DELTA_DATA_WARNING, unsafe_allow_html=True)
 
     # Omicron
@@ -58,14 +59,14 @@ if submit_button:
         st_centre.markdown(OMICRON_DATA_WARNING, unsafe_allow_html=True)
 
     # Get doses and related details
-    doses = create_doses(dose_dates, vaccine_type)
+    doses = create_doses(dose_dates, primary_vaccine_type, secondary_vaccine_type)
     start_date, end_date = get_start_and_end_dates(doses)
 
     # Display information on what immunity levels actually mean
     st_centre.markdown(WHAT_IMMUNITY_LEVEL_MEANS, unsafe_allow_html=True)
 
     # Get current immunity
-    immunity_dfs = {immunity_type: get_immunity(variant_type, doses, start_date, end_date, immunity_type) for immunity_type in ALLWED_IMMUNITY_TYPES}
+    immunity_dfs = {immunity_type: get_immunity(variant_type, doses, start_date, end_date, immunity_type) for immunity_type in ALLOWED_IMMUNITY_TYPES}
 
     current_symptomatic_immunity_level_lower = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "lower"]
     current_symptomatic_immunity_level_upper = immunity_dfs[SYMPTOMATIC].loc[str(date.today()), "upper"]
